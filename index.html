@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Destajo Hojalatería - Registro</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1100px;
+      padding: 20px 12px 32px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 18px 18px 22px;
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.18);
+      border: 1px solid #e5e7eb;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #111827;
+    }
+
+    .title-badge {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #3b82f6);
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-pill {
+      flex: 1;
+      min-width: 140px;
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #374151;
+    }
+
+    .stat-label {
+      opacity: 0.7;
+    }
+
+    .stat-value {
+      font-weight: 600;
+    }
+
+    /* FORMULARIO */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .field-label span {
+      color: #dc2626;
+      font-weight: bold;
+      margin-left: 3px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea {
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      padding: 7px 9px;
+      font-size: 0.9rem;
+      color: #111827;
+      outline: none;
+      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25);
+      background: #ffffff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 38px;
+      max-height: 120px;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .left-actions,
+    .right-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 13px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: transform 0.08s, box-shadow 0.08s, background 0.16s, opacity 0.16s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-secondary {
+      background: #f9fafb;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .btn-danger {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    .btn-danger:hover {
+      background: #fee2e2;
+    }
+
+    .btn-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      padding: 0;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .search-input {
+      position: relative;
+    }
+
+    .search-input input {
+      padding-left: 26px;
+      font-size: 0.85rem;
+    }
+
+    .search-input span {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: #9ca3af;
+      pointer-events: none;
+    }
+
+    /* FILTROS FECHA */
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      font-size: 0.8rem;
+      color: #4b5563;
+    }
+
+    .filters-row small {
+      font-weight: 500;
+      margin-right: 2px;
+    }
+
+    .filters-row input[type="date"] {
+      font-size: 0.8rem;
+      padding: 5px 8px;
+    }
+
+    /* TABLA */
+    .table-wrapper {
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      min-width: 650px;
+    }
+
+    thead {
+      background: #f3f4f6;
+    }
+
+    th,
+    td {
+      padding: 7px 9px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      font-weight: 600;
+      color: #4b5563;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background: #e0f2fe;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 500;
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 6px;
+      flex-wrap: nowrap;
+    }
+
+    .empty-row {
+      text-align: center;
+      padding: 14px 0;
+      color: #9ca3af;
+    }
+
+    /* TOASTS */
+    .toast-container {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 9999;
+    }
+
+    .toast {
+      min-width: 220px;
+      max-width: 320px;
+      padding: 7px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      animation: slideIn 0.16s ease-out;
+    }
+
+    .toast-success {
+      border-color: #bbf7d0;
+      background: #f0fdf4;
+    }
+
+    .toast-error {
+      border-color: #fecaca;
+      background: #fef2f2;
+    }
+
+    .toast span.icon {
+      font-size: 1rem;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(8px) translateY(-4px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 14px 12px 18px;
+      }
+      .title {
+        font-size: 1.15rem;
+      }
+      .subtitle {
+        font-size: 0.8rem;
+      }
+      .table-wrapper {
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="card">
+      <div class="header">
+        <div>
+          <div class="title">
+            🚗 Destajo Hojalatería
+            <span class="title-badge">Web</span>
+          </div>
+          <div class="subtitle">
+            Captura autos y genera reportes por periodo (CSV / PDF). Datos guardados en Firestore.
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill">
+          <span class="stat-label">Registros totales</span>
+          <span class="stat-value" id="statTotal">0</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Última orden</span>
+          <span class="stat-value" id="statUltima">—</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Modo</span>
+          <span class="stat-value" id="statModo">Nuevo registro</span>
+        </div>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div class="form-grid">
+        <div class="field-group">
+          <label class="field-label">Auto <span>*</span></label>
+          <input type="text" id="inputAuto" placeholder="Ej. VERSA, TIDA, TIGUAN..." autocomplete="off" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Color <span>*</span></label>
+          <input type="text" id="inputColor" placeholder="Ej. BLANCO, PLATA, ARENA..." autocomplete="off" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Orden <span>*</span></label>
+          <input type="number" id="inputOrden" placeholder="Ej. 13203" autocomplete="off" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Detalle / Trabajo</label>
+          <textarea id="inputDetalle" placeholder="Ej. solo rin, 2 rines, complemento..."></textarea>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <div class="left-actions">
+          <button class="btn btn-primary" id="btnGuardar">
+            💾 Guardar
+          </button>
+          <button class="btn btn-secondary" id="btnLimpiar" type="button">
+            🔁 Limpiar
+          </button>
+        </div>
+
+        <div class="right-actions">
+          <div class="search-input">
+            <span>🔍</span>
+            <input
+              type="number"
+              id="inputBuscarOrden"
+              placeholder="Buscar por número de orden"
+            />
+          </div>
+          <button class="btn btn-secondary" id="btnExportarCSV" type="button">
+            📄 CSV
+          </button>
+          <button class="btn btn-secondary" id="btnExportarPDF" type="button">
+            🧾 PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- FILTRO POR FECHAS -->
+      <div class="filters-row">
+        <small>Filtrar por fecha (automática):</small>
+        <span>Del</span>
+        <input type="date" id="inputFechaDesde" />
+        <span>al</span>
+        <input type="date" id="inputFechaHasta" />
+        <button class="btn btn-secondary" id="btnAplicarFiltros" type="button">
+          🔎 Aplicar filtro
+        </button>
+        <button class="btn btn-secondary" id="btnLimpiarFiltros" type="button">
+          ❌ Limpiar filtro
+        </button>
+      </div>
+
+      <!-- TABLA -->
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>AUTO</th>
+              <th>COLOR</th>
+              <th>ORDEN</th>
+              <th>DETALLE</th>
+              <th>FECHA</th>
+              <th style="width:110px;">ACCIONES</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyRegistros">
+            <tr>
+              <td class="empty-row" colspan="6">
+                No hay registros todavía. Captura el primero arriba 👆
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOASTS -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- jsPDF + AutoTable (para PDF) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- FIREBASE & LÓGICA APP -->
+  <script type="module">
+    // Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      onSnapshot,
+      query,
+      orderBy,
+      updateDoc,
+      deleteDoc,
+      doc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+    // Config de tu proyecto
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFzS_kJPxulB7JMkL6C0lwncUcf5YJ2sc",
+      authDomain: "destajo-hojalateria.firebaseapp.com",
+      projectId: "destajo-hojalateria",
+      storageBucket: "destajo-hojalateria.firebasestorage.app",
+      messagingSenderId: "313174097212",
+      appId: "1:313174097212:web:73f75a346000acd96db239",
+      measurementId: "G-8FZJXY8753"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const registrosCol = collection(db, "registros");
+
+    // Estado
+    let registros = [];
+    let vistaActual = [];
+    let editingId = null;
+
+    // DOM
+    const inputAuto = document.getElementById("inputAuto");
+    const inputColor = document.getElementById("inputColor");
+    const inputOrden = document.getElementById("inputOrden");
+    const inputDetalle = document.getElementById("inputDetalle");
+
+    const inputBuscarOrden = document.getElementById("inputBuscarOrden");
+    const inputFechaDesde = document.getElementById("inputFechaDesde");
+    const inputFechaHasta = document.getElementById("inputFechaHasta");
+
+    const btnGuardar = document.getElementById("btnGuardar");
+    const btnLimpiar = document.getElementById("btnLimpiar");
+    const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
+    const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
+    const btnExportarCSV = document.getElementById("btnExportarCSV");
+    const btnExportarPDF = document.getElementById("btnExportarPDF");
+
+    const tbodyRegistros = document.getElementById("tbodyRegistros");
+    const statTotal = document.getElementById("statTotal");
+    const statUltima = document.getElementById("statUltima");
+    const statModo = document.getElementById("statModo");
+    const toastContainer = document.getElementById("toastContainer");
+
+    // --- Utilidad: fecha hoy en YYYY-MM-DD
+    function hoyISO() {
+      const d = new Date();
+      const off = d.getTimezoneOffset();
+      const local = new Date(d.getTime() - off * 60 * 1000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    // TOAST
+    function showToast(message, type = "success") {
+      const toast = document.createElement("div");
+      toast.className = `toast ${type === "error" ? "toast-error" : "toast-success"}`;
+      const iconSpan = document.createElement("span");
+      iconSpan.className = "icon";
+      iconSpan.textContent = type === "error" ? "⚠️" : "✅";
+      const msgSpan = document.createElement("span");
+      msgSpan.textContent = message;
+      toast.appendChild(iconSpan);
+      toast.appendChild(msgSpan);
+      toastContainer.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transition = "opacity 0.2s";
+        setTimeout(() => toast.remove(), 220);
+      }, 2600);
+    }
+
+    // RENDER TABLA
+    function renderTabla(lista) {
+      tbodyRegistros.innerHTML = "";
+
+      if (!lista || lista.length === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = 6;
+        td.className = "empty-row";
+        td.textContent = "No se encontraron registros con los filtros actuales.";
+        tr.appendChild(td);
+        tbodyRegistros.appendChild(tr);
+        return;
+      }
+
+      lista.forEach((reg) => {
+        const tr = document.createElement("tr");
+
+        const tdAuto = document.createElement("td");
+        const tdColor = document.createElement("td");
+        const tdOrden = document.createElement("td");
+        const tdDetalle = document.createElement("td");
+        const tdFecha = document.createElement("td");
+        const tdAcciones = document.createElement("td");
+        tdAcciones.className = "actions-cell";
+
+        tdAuto.innerHTML = `<span class="tag">${reg.auto || ""}</span>`;
+        tdColor.textContent = reg.color || "";
+        tdOrden.textContent = reg.orden || "";
+        tdDetalle.textContent = reg.detalle || "";
+        tdFecha.textContent = reg.fecha || "";
+
+        // Editar
+        const btnEdit = document.createElement("button");
+        btnEdit.className = "btn btn-secondary btn-icon";
+        btnEdit.title = "Editar";
+        btnEdit.textContent = "✏️";
+        btnEdit.addEventListener("click", () => cargarEnFormulario(reg));
+
+        // Borrar
+        const btnDel = document.createElement("button");
+        btnDel.className = "btn btn-danger btn-icon";
+        btnDel.title = "Eliminar";
+        btnDel.textContent = "🗑️";
+        btnDel.addEventListener("click", () => eliminarRegistro(reg.id));
+
+        tdAcciones.appendChild(btnEdit);
+        tdAcciones.appendChild(btnDel);
+
+        tr.appendChild(tdAuto);
+        tr.appendChild(tdColor);
+        tr.appendChild(tdOrden);
+        tr.appendChild(tdDetalle);
+        tr.appendChild(tdFecha);
+        tr.appendChild(tdAcciones);
+
+        tbodyRegistros.appendChild(tr);
+      });
+    }
+
+    // LIMPIAR FORM
+    function limpiarFormulario() {
+      inputAuto.value = "";
+      inputColor.value = "";
+      inputOrden.value = "";
+      inputDetalle.value = "";
+      editingId = null;
+      btnGuardar.textContent = "💾 Guardar";
+      statModo.textContent = "Nuevo registro";
+    }
+
+    // EDITAR
+    function cargarEnFormulario(reg) {
+      inputAuto.value = reg.auto || "";
+      inputColor.value = reg.color || "";
+      inputOrden.value = reg.orden || "";
+      inputDetalle.value = reg.detalle || "";
+      editingId = reg.id;
+      btnGuardar.textContent = "✅ Actualizar";
+      statModo.textContent = "Editando orden " + (reg.orden || "");
+      inputAuto.focus();
+    }
+
+    // GUARDAR / ACTUALIZAR
+    async function guardarRegistro() {
+      const auto = inputAuto.value.trim().toUpperCase();
+      const color = inputColor.value.trim().toUpperCase();
+      const orden = inputOrden.value.trim();
+      const detalle = inputDetalle.value.trim();
+      const fecha = hoyISO(); // fecha automática
+
+      if (!auto || !color || !orden) {
+        showToast("Por favor llena AUTO, COLOR y ORDEN.", "error");
+        return;
+      }
+
+      try {
+        if (editingId) {
+          const ref = doc(db, "registros", editingId);
+          await updateDoc(ref, { auto, color, orden, detalle });
+          showToast("Registro actualizado correctamente.");
+        } else {
+          await addDoc(registrosCol, {
+            auto,
+            color,
+            orden,
+            detalle,
+            fecha,              // string YYYY-MM-DD
+            createdAt: serverTimestamp()
+          });
+          showToast("Registro guardado en Firestore.");
+        }
+        limpiarFormulario();
+      } catch (err) {
+        console.error(err);
+        showToast("Error al guardar. Revisa la consola.", "error");
+      }
+    }
+
+    // ELIMINAR
+    async function eliminarRegistro(id) {
+      const ok = confirm("¿Seguro que deseas eliminar este registro?");
+      if (!ok) return;
+      try {
+        const ref = doc(db, "registros", id);
+        await deleteDoc(ref);
+        showToast("Registro eliminado.");
+      } catch (err) {
+        console.error(err);
+        showToast("Error al eliminar.", "error");
+      }
+    }
+
+    // APLICAR FILTROS (fecha + orden)
+    function aplicarFiltros() {
+      const qOrden = inputBuscarOrden.value.trim();
+      const desde = inputFechaDesde.value;
+      const hasta = inputFechaHasta.value;
+
+      let lista = registros.slice();
+
+      if (desde) {
+        lista = lista.filter((r) => r.fecha && r.fecha >= desde);
+      }
+      if (hasta) {
+        lista = lista.filter((r) => r.fecha && r.fecha <= hasta);
+      }
+      if (qOrden) {
+        lista = lista.filter((r) => String(r.orden || "").includes(qOrden));
+      }
+
+      vistaActual = lista;
+      renderTabla(lista);
+    }
+
+    // LIMPIAR FILTROS
+    function limpiarFiltros() {
+      inputFechaDesde.value = "";
+      inputFechaHasta.value = "";
+      inputBuscarOrden.value = "";
+      aplicarFiltros();
+    }
+
+    // EXPORTAR CSV (usa vistaActual)
+    function exportarCSV() {
+      if (!vistaActual.length) {
+        showToast("No hay datos para exportar (revisa filtros).", "error");
+        return;
+      }
+
+      const encabezados = ["AUTO", "COLOR", "ORDEN", "DETALLE", "FECHA"];
+      const filas = vistaActual.map((r) => [
+        r.auto || "",
+        r.color || "",
+        r.orden || "",
+        (r.detalle || "").replace(/\n/g, " "),
+        r.fecha || ""
+      ]);
+
+      let csv = encabezados.join(",") + "\n";
+      filas.forEach((fila) => {
+        const linea = fila
+          .map((campo) => `"${String(campo).replace(/"/g, '""')}"`)
+          .join(",");
+        csv += linea + "\n";
+      });
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const ahora = new Date();
+      const nombre =
+        "destajo_registros_" +
+        ahora.toISOString().slice(0, 10).replace(/-/g, "") +
+        ".csv";
+      a.download = nombre;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      showToast("CSV generado. Ábrelo con Excel.");
+    }
+
+    // EXPORTAR PDF (usa vistaActual)
+    function exportarPDF() {
+      if (!vistaActual.length) {
+        showToast("No hay datos para PDF (revisa filtros).", "error");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const docPDF = new jsPDF("p", "pt", "a4");
+
+      const desde = inputFechaDesde.value || "Todas";
+      const hasta = inputFechaHasta.value || "Todas";
+
+      docPDF.setFontSize(14);
+      docPDF.text("Reporte Destajo Hojalatería", 40, 40);
+      docPDF.setFontSize(10);
+
+      const hoy = new Date();
+      const hoyStr = hoy.toISOString().slice(0, 10);
+      docPDF.text("Generado: " + hoyStr, 40, 58);
+      docPDF.text("Periodo: " + desde + "  a  " + hasta, 40, 72);
+
+      const cuerpo = vistaActual.map((r) => [
+        r.auto || "",
+        r.color || "",
+        r.orden || "",
+        (r.detalle || "").replace(/\n/g, " "),
+        r.fecha || ""
+      ]);
+
+      docPDF.autoTable({
+        head: [["AUTO", "COLOR", "ORDEN", "DETALLE", "FECHA"]],
+        body: cuerpo,
+        startY: 90,
+        styles: { fontSize: 8, cellPadding: 3 },
+        headStyles: { fillColor: [37, 99, 235], textColor: 255 }
+      });
+
+      const nombre =
+        "destajo_reporte_" + hoyStr.replace(/-/g, "") + ".pdf";
+      docPDF.save(nombre);
+
+      showToast("PDF generado y descargado.");
+    }
+
+    // LISTENER TIEMPO REAL
+    function iniciarListener() {
+      const qReg = query(registrosCol, orderBy("createdAt", "desc"));
+      onSnapshot(
+        qReg,
+        (snapshot) => {
+          registros = snapshot.docs.map((d) => {
+            const data = d.data();
+            let fecha = data.fecha;
+            // si no tiene fecha (viejos), intentar derivar de createdAt
+            if (!fecha && data.createdAt && data.createdAt.toDate) {
+              const dt = data.createdAt.toDate();
+              fecha = dt.toISOString().slice(0, 10);
+            }
+            return {
+              id: d.id,
+              ...data,
+              fecha: fecha || ""
+            };
+          });
+
+          // stats
+          statTotal.textContent = registros.length;
+          if (registros.length > 0) {
+            statUltima.textContent = registros[0].orden || "—";
+          } else {
+            statUltima.textContent = "—";
+          }
+
+          // aplicar filtros actuales a la nueva lista
+          aplicarFiltros();
+        },
+        (error) => {
+          console.error("Error listener:", error);
+          showToast("Error leyendo datos de Firestore.", "error");
+        }
+      );
+    }
+
+    // EVENTOS
+    btnGuardar.addEventListener("click", (e) => {
+      e.preventDefault();
+      guardarRegistro();
+    });
+
+    btnLimpiar.addEventListener("click", (e) => {
+      e.preventDefault();
+      limpiarFormulario();
+    });
+
+    inputBuscarOrden.addEventListener("input", aplicarFiltros);
+    btnAplicarFiltros.addEventListener("click", aplicarFiltros);
+    btnLimpiarFiltros.addEventListener("click", (e) => {
+      e.preventDefault();
+      limpiarFiltros();
+    });
+
+    btnExportarCSV.addEventListener("click", exportarCSV);
+    btnExportarPDF.addEventListener("click", exportarPDF);
+
+    // Iniciar
+    iniciarListener();
+  </script>
+</body>
+</html>
