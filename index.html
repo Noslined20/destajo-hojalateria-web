@@ -15,17 +15,139 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
       background: #e5e7eb;
       color: #111827;
     }
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+
+  background-image: url("https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1600&q=80");
+background-size: cover;
+  background-position: center;
+  background-color: #000;
+}
+
+
+
+
+
+
+
+    .login-card {
+      width: 100%;
+      max-width: 380px;
+      background: rgba(15, 23, 42, 0.92);
+      border-radius: 18px;
+      padding: 22px 20px 20px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      color: #e5e7eb;
+      backdrop-filter: blur(10px);
+    }
+
+    .login-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-subtitle {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+
+    .login-badge {
+      font-size: 0.7rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #3b82f6);
+      color: #0b1120;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .login-field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+
+    .login-label {
+      font-size: 0.78rem;
+      color: #cbd5f5;
+    }
+
+    .login-input {
+      border-radius: 11px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 8px 10px;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+      outline: none;
+      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
+    }
+
+    .login-input:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.45);
+      background: #020617;
+    }
+
+    .login-btn {
+      margin-top: 8px;
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.55);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 34px rgba(37, 99, 235, 0.65);
+    }
+
+    .login-error {
+      min-height: 16px;
+      font-size: 0.78rem;
+      color: #fecaca;
+      margin-top: 6px;
+    }
+
+    .login-foot {
+      margin-top: 12px;
+      font-size: 0.72rem;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    /* ===== APP ===== */
 
     .app-shell {
       width: 100%;
       max-width: 1100px;
       padding: 20px 12px 32px;
+      margin: 0 auto;
     }
 
     .card {
@@ -98,6 +220,29 @@
 
     .stat-value {
       font-weight: 600;
+    }
+
+    .btn-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-small {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-small:hover {
+      background: #e5e7eb;
     }
 
     /* FORMULARIO */
@@ -227,13 +372,14 @@
     }
 
     .btn-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      padding: 0;
-      justify-content: center;
-      font-size: 0.9rem;
-    }
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  padding: 0;
+  justify-content: center;
+  font-size: 1.1rem; /* icono más grande */
+}
+
 
     .btn:active {
       transform: translateY(0);
@@ -259,7 +405,7 @@
       pointer-events: none;
     }
 
-    /* FILTROS FECHA */
+    /* FILTRO FECHAS */
     .filters-row {
       display: flex;
       flex-wrap: wrap;
@@ -298,7 +444,7 @@
       width: 100%;
       border-collapse: collapse;
       font-size: 0.82rem;
-      min-width: 650px;
+      min-width: 720px;
     }
 
     thead {
@@ -419,120 +565,162 @@
   </style>
 </head>
 <body>
-  <div class="app-shell">
-    <div class="card">
-      <div class="header">
-        <div>
-          <div class="title">
-            🚗 Pintura
-            
-          </div>
+  <!-- LOGIN -->
+  <div id="loginWrapper" class="login-shell">
+    <div class="login-card">
+      <div class="login-title">
+        🚗  Pintura
+        
+      </div>
+     
+
+      <div class="login-field">
+        <label class="login-label">Correo</label>
+        <input id="loginEmail" type="email" class="login-input" placeholder="ej. destajo@taller.com" />
+      </div>
+
+      <div class="login-field">
+        <label class="login-label">Contraseña</label>
+        <input id="loginPassword" type="password" class="login-input" placeholder="Tu contraseña" />
+      </div>
+
+      <button id="btnLogin" class="login-btn">
+        Entrar
+      </button>
+
+      <div id="loginError" class="login-error"></div>
+
+      
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="appWrapper" style="display:none;">
+    <div class="app-shell">
+      <div class="card">
+        <div class="header">
+          <div>
+            <div class="title">
+              🚗PINTURA
+              
+            </div>
           
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-pill">
-          <span class="stat-label">Registros totales</span>
-          <span class="stat-value" id="statTotal">0</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Última orden</span>
-          <span class="stat-value" id="statUltima">—</span>
-        </div>
-        <div class="stat-pill">
-          <span class="stat-label">Modo</span>
-          <span class="stat-value" id="statModo">Nuevo registro</span>
-        </div>
-      </div>
-
-      <!-- FORMULARIO -->
-      <div class="form-grid">
-        <div class="field-group">
-          <label class="field-label">Auto <span>*</span></label>
-          <input type="text" id="inputAuto" placeholder="Ej. VERSA, TIDA, TIGUAN..." autocomplete="off" />
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Color <span>*</span></label>
-          <input type="text" id="inputColor" placeholder="Ej. BLANCO, PLATA, ARENA..." autocomplete="off" />
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Orden <span>*</span></label>
-          <input type="number" id="inputOrden" placeholder="Ej. 13203" autocomplete="off" />
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Detalle / Trabajo</label>
-          <textarea id="inputDetalle" placeholder="Ej. solo rin, 2 rines, complemento..."></textarea>
-        </div>
-      </div>
-
-      <div class="actions-row">
-        <div class="left-actions">
-          <button class="btn btn-primary" id="btnGuardar">
-            💾 Guardar
-          </button>
-          <button class="btn btn-secondary" id="btnLimpiar" type="button">
-            🔁 Limpiar
-          </button>
-        </div>
-
-        <div class="right-actions">
-          <div class="search-input">
-            <span>🔍</span>
-            <input
-              type="number"
-              id="inputBuscarOrden"
-              placeholder="Buscar por número de orden"
-            />
           </div>
-          <button class="btn btn-secondary" id="btnExportarCSV" type="button">
-            📄 CSV
+          <div class="btn-header">
+            <button class="btn-small" id="btnLogout">⏏ Cerrar sesión</button>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-pill">
+            <span class="stat-label">Registros totales</span>
+            <span class="stat-value" id="statTotal">0</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label">Última orden</span>
+            <span class="stat-value" id="statUltima">—</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label">Modo</span>
+            <span class="stat-value" id="statModo">Nuevo registro</span>
+          </div>
+        </div>
+
+        <!-- FORMULARIO -->
+        <div class="form-grid">
+          <div class="field-group">
+            <label class="field-label">Auto <span>*</span></label>
+            <input type="text" id="inputAuto" placeholder="Ej. VERSA, TIDA, TIGUAN..." autocomplete="off" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Color <span>*</span></label>
+            <input type="text" id="inputColor" placeholder="Ej. BLANCO, PLATA, ARENA..." autocomplete="off" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Orden <span>*</span></label>
+            <input type="number" id="inputOrden" placeholder="Ej. 13203" autocomplete="off" />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Detalle / Trabajo</label>
+            <textarea id="inputDetalle" placeholder="Ej. solo rin, 2 rines, complemento..."></textarea>
+          </div>
+
+          <!-- NUEVO: PLACA -->
+          <div class="field-group">
+            <label class="field-label">Placa</label>
+            <input type="text" id="inputPlaca" placeholder="Ej. ABC-123-A" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="actions-row">
+          <div class="left-actions">
+            <button class="btn btn-primary" id="btnGuardar">
+              💾 Guardar
+            </button>
+            <button class="btn btn-secondary" id="btnLimpiar" type="button">
+              🔁 Limpiar
+            </button>
+          </div>
+
+          <div class="right-actions">
+            <div class="search-input">
+              <span>🔍</span>
+              <input
+                type="number"
+                id="inputBuscarOrden"
+                placeholder="Buscar por número de orden"
+              />
+            </div>
+            <button class="btn btn-secondary" id="btnExportarCSV" type="button">
+              📄 CSV
+            </button>
+            <button class="btn btn-secondary" id="btnExportarPDF" type="button">
+              🧾 PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- FILTRO POR FECHAS -->
+        <div class="filters-row">
+          <small>Filtrar por fecha (automática):</small>
+          <span>Del</span>
+          <input type="date" id="inputFechaDesde" />
+          <span>al</span>
+          <input type="date" id="inputFechaHasta" />
+          <button class="btn btn-secondary" id="btnAplicarFiltros" type="button">
+            🔎 Aplicar filtro
           </button>
-          <button class="btn btn-secondary" id="btnExportarPDF" type="button">
-            🧾 PDF
+          <button class="btn btn-secondary" id="btnLimpiarFiltros" type="button">
+            ❌ Limpiar filtro
           </button>
         </div>
-      </div>
 
-      <!-- FILTRO POR FECHAS -->
-      <div class="filters-row">
-        <small>Filtrar por fecha (automática):</small>
-        <span>Del</span>
-        <input type="date" id="inputFechaDesde" />
-        <span>al</span>
-        <input type="date" id="inputFechaHasta" />
-        <button class="btn btn-secondary" id="btnAplicarFiltros" type="button">
-          🔎 Aplicar filtro
-        </button>
-        <button class="btn btn-secondary" id="btnLimpiarFiltros" type="button">
-          ❌ Limpiar filtro
-        </button>
-      </div>
-
-      <!-- TABLA -->
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>AUTO</th>
-              <th>COLOR</th>
-              <th>ORDEN</th>
-              <th>DETALLE</th>
-              <th>FECHA</th>
-              <th style="width:110px;">ACCIONES</th>
-            </tr>
-          </thead>
-          <tbody id="tbodyRegistros">
-            <tr>
-              <td class="empty-row" colspan="6">
-                No hay registros todavía. Captura el primero arriba 👆
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- TABLA -->
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>AUTO</th>
+                <th>COLOR</th>
+                <th>ORDEN</th>
+                <th>DETALLE</th>
+                <th>PLACA</th>
+                <th>FECHA</th>
+                <th style="width:110px;">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyRegistros">
+              <tr>
+                <td class="empty-row" colspan="7">
+                  No hay registros todavía. Captura el primero arriba 👆
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -540,13 +728,12 @@
   <!-- TOASTS -->
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- jsPDF + AutoTable (para PDF) -->
+  <!-- jsPDF + AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
   <!-- FIREBASE & LÓGICA APP -->
   <script type="module">
-    // Firebase
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
     import {
       getFirestore,
@@ -561,7 +748,13 @@
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
-    // Config de tu proyecto
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCFzS_kJPxulB7JMkL6C0lwncUcf5YJ2sc",
       authDomain: "destajo-hojalateria.firebaseapp.com",
@@ -574,18 +767,31 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
     const registrosCol = collection(db, "registros");
 
     // Estado
     let registros = [];
     let vistaActual = [];
     let editingId = null;
+    let listenerStarted = false;
 
-    // DOM
+    // DOM login
+    const loginWrapper = document.getElementById("loginWrapper");
+    const appWrapper   = document.getElementById("appWrapper");
+
+    const loginEmail    = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+    const btnLogin      = document.getElementById("btnLogin");
+    const loginError    = document.getElementById("loginError");
+    const btnLogout     = document.getElementById("btnLogout");
+
+    // DOM app
     const inputAuto = document.getElementById("inputAuto");
     const inputColor = document.getElementById("inputColor");
     const inputOrden = document.getElementById("inputOrden");
     const inputDetalle = document.getElementById("inputDetalle");
+    const inputPlaca = document.getElementById("inputPlaca");
 
     const inputBuscarOrden = document.getElementById("inputBuscarOrden");
     const inputFechaDesde = document.getElementById("inputFechaDesde");
@@ -604,12 +810,23 @@
     const statModo = document.getElementById("statModo");
     const toastContainer = document.getElementById("toastContainer");
 
-    // --- Utilidad: fecha hoy en YYYY-MM-DD
+    // Utilidad fecha hoy
     function hoyISO() {
       const d = new Date();
       const off = d.getTimezoneOffset();
       const local = new Date(d.getTime() - off * 60 * 1000);
       return local.toISOString().slice(0, 10);
+    }
+
+    // Mostrar login / app
+    function showApp() {
+      loginWrapper.style.display = "none";
+      appWrapper.style.display = "block";
+    }
+
+    function showLogin() {
+      appWrapper.style.display = "none";
+      loginWrapper.style.display = "flex";
     }
 
     // TOAST
@@ -631,14 +848,14 @@
       }, 2600);
     }
 
-    // RENDER TABLA
+    // TABLA
     function renderTabla(lista) {
       tbodyRegistros.innerHTML = "";
 
       if (!lista || lista.length === 0) {
         const tr = document.createElement("tr");
         const td = document.createElement("td");
-        td.colSpan = 6;
+        td.colSpan = 7;
         td.className = "empty-row";
         td.textContent = "No se encontraron registros con los filtros actuales.";
         tr.appendChild(td);
@@ -653,6 +870,7 @@
         const tdColor = document.createElement("td");
         const tdOrden = document.createElement("td");
         const tdDetalle = document.createElement("td");
+        const tdPlaca = document.createElement("td");
         const tdFecha = document.createElement("td");
         const tdAcciones = document.createElement("td");
         tdAcciones.className = "actions-cell";
@@ -661,16 +879,15 @@
         tdColor.textContent = reg.color || "";
         tdOrden.textContent = reg.orden || "";
         tdDetalle.textContent = reg.detalle || "";
+        tdPlaca.textContent = reg.placa || "";
         tdFecha.textContent = reg.fecha || "";
 
-        // Editar
         const btnEdit = document.createElement("button");
         btnEdit.className = "btn btn-secondary btn-icon";
         btnEdit.title = "Editar";
         btnEdit.textContent = "✏️";
         btnEdit.addEventListener("click", () => cargarEnFormulario(reg));
 
-        // Borrar
         const btnDel = document.createElement("button");
         btnDel.className = "btn btn-danger btn-icon";
         btnDel.title = "Eliminar";
@@ -684,6 +901,7 @@
         tr.appendChild(tdColor);
         tr.appendChild(tdOrden);
         tr.appendChild(tdDetalle);
+        tr.appendChild(tdPlaca);
         tr.appendChild(tdFecha);
         tr.appendChild(tdAcciones);
 
@@ -691,36 +909,37 @@
       });
     }
 
-    // LIMPIAR FORM
+    // FORM
     function limpiarFormulario() {
       inputAuto.value = "";
       inputColor.value = "";
       inputOrden.value = "";
       inputDetalle.value = "";
+      inputPlaca.value = "";
       editingId = null;
       btnGuardar.textContent = "💾 Guardar";
       statModo.textContent = "Nuevo registro";
     }
 
-    // EDITAR
     function cargarEnFormulario(reg) {
       inputAuto.value = reg.auto || "";
       inputColor.value = reg.color || "";
       inputOrden.value = reg.orden || "";
       inputDetalle.value = reg.detalle || "";
+      inputPlaca.value = reg.placa || "";
       editingId = reg.id;
       btnGuardar.textContent = "✅ Actualizar";
       statModo.textContent = "Editando orden " + (reg.orden || "");
       inputAuto.focus();
     }
 
-    // GUARDAR / ACTUALIZAR
     async function guardarRegistro() {
       const auto = inputAuto.value.trim().toUpperCase();
       const color = inputColor.value.trim().toUpperCase();
       const orden = inputOrden.value.trim();
       const detalle = inputDetalle.value.trim();
-      const fecha = hoyISO(); // fecha automática
+      const placa = inputPlaca.value.trim().toUpperCase();
+      const fecha = hoyISO();
 
       if (!auto || !color || !orden) {
         showToast("Por favor llena AUTO, COLOR y ORDEN.", "error");
@@ -730,7 +949,7 @@
       try {
         if (editingId) {
           const ref = doc(db, "registros", editingId);
-          await updateDoc(ref, { auto, color, orden, detalle });
+          await updateDoc(ref, { auto, color, orden, detalle, placa });
           showToast("Registro actualizado correctamente.");
         } else {
           await addDoc(registrosCol, {
@@ -738,7 +957,8 @@
             color,
             orden,
             detalle,
-            fecha,              // string YYYY-MM-DD
+            placa,
+            fecha,
             createdAt: serverTimestamp()
           });
           showToast("Registro guardado en Firestore.");
@@ -750,7 +970,6 @@
       }
     }
 
-    // ELIMINAR
     async function eliminarRegistro(id) {
       const ok = confirm("¿Seguro que deseas eliminar este registro?");
       if (!ok) return;
@@ -764,7 +983,7 @@
       }
     }
 
-    // APLICAR FILTROS (fecha + orden)
+    // FILTROS
     function aplicarFiltros() {
       const qOrden = inputBuscarOrden.value.trim();
       const desde = inputFechaDesde.value;
@@ -786,7 +1005,6 @@
       renderTabla(lista);
     }
 
-    // LIMPIAR FILTROS
     function limpiarFiltros() {
       inputFechaDesde.value = "";
       inputFechaHasta.value = "";
@@ -794,19 +1012,20 @@
       aplicarFiltros();
     }
 
-    // EXPORTAR CSV (usa vistaActual)
+    // CSV
     function exportarCSV() {
       if (!vistaActual.length) {
         showToast("No hay datos para exportar (revisa filtros).", "error");
         return;
       }
 
-      const encabezados = ["AUTO", "COLOR", "ORDEN", "DETALLE", "FECHA"];
+      const encabezados = ["AUTO", "COLOR", "ORDEN", "DETALLE", "PLACA", "FECHA"];
       const filas = vistaActual.map((r) => [
         r.auto || "",
         r.color || "",
         r.orden || "",
         (r.detalle || "").replace(/\n/g, " "),
+        r.placa || "",
         r.fecha || ""
       ]);
 
@@ -836,7 +1055,7 @@
       showToast("CSV generado. Ábrelo con Excel.");
     }
 
-    // EXPORTAR PDF (usa vistaActual)
+    // PDF (título Pintura + fecha + tabla)
     function exportarPDF() {
       if (!vistaActual.length) {
         showToast("No hay datos para PDF (revisa filtros).", "error");
@@ -846,28 +1065,28 @@
       const { jsPDF } = window.jspdf;
       const docPDF = new jsPDF("p", "pt", "a4");
 
-      const desde = inputFechaDesde.value || "Todas";
-      const hasta = inputFechaHasta.value || "Todas";
-
-      docPDF.setFontSize(14);
-      docPDF.text("Reporte Destajo Hojalatería", 40, 40);
-      docPDF.setFontSize(10);
-
       const hoy = new Date();
       const hoyStr = hoy.toISOString().slice(0, 10);
-      docPDF.text("Generado: " + hoyStr, 40, 58);
-      docPDF.text("Periodo: " + desde + "  a  " + hasta, 40, 72);
+
+      // Título
+      docPDF.setFontSize(18);
+      docPDF.text("Pintura", 40, 50);
+
+      // Fecha
+      docPDF.setFontSize(11);
+      docPDF.text("Fecha: " + hoyStr, 40, 70);
 
       const cuerpo = vistaActual.map((r) => [
         r.auto || "",
         r.color || "",
         r.orden || "",
         (r.detalle || "").replace(/\n/g, " "),
+        r.placa || "",
         r.fecha || ""
       ]);
 
       docPDF.autoTable({
-        head: [["AUTO", "COLOR", "ORDEN", "DETALLE", "FECHA"]],
+        head: [["AUTO", "COLOR", "ORDEN", "DETALLE", "PLACA", "FECHA"]],
         body: cuerpo,
         startY: 90,
         styles: { fontSize: 8, cellPadding: 3 },
@@ -875,13 +1094,13 @@
       });
 
       const nombre =
-        "destajo_reporte_" + hoyStr.replace(/-/g, "") + ".pdf";
+        "destajo_pintura_" + hoyStr.replace(/-/g, "") + ".pdf";
       docPDF.save(nombre);
 
       showToast("PDF generado y descargado.");
     }
 
-    // LISTENER TIEMPO REAL
+    // LISTENER Firestore
     function iniciarListener() {
       const qReg = query(registrosCol, orderBy("createdAt", "desc"));
       onSnapshot(
@@ -890,7 +1109,6 @@
           registros = snapshot.docs.map((d) => {
             const data = d.data();
             let fecha = data.fecha;
-            // si no tiene fecha (viejos), intentar derivar de createdAt
             if (!fecha && data.createdAt && data.createdAt.toDate) {
               const dt = data.createdAt.toDate();
               fecha = dt.toISOString().slice(0, 10);
@@ -902,7 +1120,6 @@
             };
           });
 
-          // stats
           statTotal.textContent = registros.length;
           if (registros.length > 0) {
             statUltima.textContent = registros[0].orden || "—";
@@ -910,7 +1127,6 @@
             statUltima.textContent = "—";
           }
 
-          // aplicar filtros actuales a la nueva lista
           aplicarFiltros();
         },
         (error) => {
@@ -920,7 +1136,45 @@
       );
     }
 
-    // EVENTOS
+    // LOGIN EVENTS
+    btnLogin.addEventListener("click", async () => {
+      const email = loginEmail.value.trim();
+      const pass = loginPassword.value;
+
+      loginError.textContent = "";
+
+      if (!email || !pass) {
+        loginError.textContent = "Ingresa correo y contraseña.";
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, pass);
+        // onAuthStateChanged hará el resto
+      } catch (err) {
+        console.error(err);
+        loginError.textContent = "Correo o contraseña incorrectos.";
+      }
+    });
+
+    btnLogout.addEventListener("click", () => {
+      signOut(auth);
+    });
+
+    // AUTH STATE
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        showApp();
+        if (!listenerStarted) {
+          iniciarListener();
+          listenerStarted = true;
+        }
+      } else {
+        showLogin();
+      }
+    });
+
+    // EVENTOS APP
     btnGuardar.addEventListener("click", (e) => {
       e.preventDefault();
       guardarRegistro();
@@ -940,9 +1194,7 @@
 
     btnExportarCSV.addEventListener("click", exportarCSV);
     btnExportarPDF.addEventListener("click", exportarPDF);
-
-    // Iniciar
-    iniciarListener();
   </script>
 </body>
 </html>
+
