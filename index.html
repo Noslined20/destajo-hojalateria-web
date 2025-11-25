@@ -2,758 +2,449 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Destajo Hojalatería - Registro</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Control Pintura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
+    /* ===== ESTILOS BASE ===== */
+    :root {
+      --primary: #ef4444; /* Rojo intenso */
+      --bg-body: #f8fafc;
+      --text-main: #0f172a;
+    }
+
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background: #e5e7eb;
-      color: #111827;
-    }
-.login-shell {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-
-  background-image: url("https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1600&q=80");
-background-size: cover;
-  background-position: center;
-  background-color: #000;
-}
-
-
-
-
-
-
-
-    .login-card {
-      width: 100%;
-      max-width: 380px;
-      background: rgba(15, 23, 42, 0.92);
-      border-radius: 18px;
-      padding: 22px 20px 20px;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      color: #e5e7eb;
-      backdrop-filter: blur(10px);
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-size: 16px;
     }
 
-    .login-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 4px;
+    /* ===== LOGIN ESTILO DARK LUXURY (PORSCHE) ===== */
+    .login-shell {
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .login-subtitle {
-      font-size: 0.85rem;
-      color: #9ca3af;
-      margin-bottom: 14px;
-    }
-
-    .login-badge {
-      font-size: 0.7rem;
-      padding: 3px 7px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22c55e, #3b82f6);
-      color: #0b1120;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .login-field {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-bottom: 10px;
-    }
-
-    .login-label {
-      font-size: 0.78rem;
-      color: #cbd5f5;
-    }
-
-    .login-input {
-      border-radius: 11px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.9);
-      padding: 8px 10px;
-      font-size: 0.9rem;
-      color: #e5e7eb;
-      outline: none;
-      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
-    }
-
-    .login-input:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.45);
-      background: #020617;
-    }
-
-    .login-btn {
-      margin-top: 8px;
-      width: 100%;
-      border: none;
-      border-radius: 999px;
-      padding: 8px 0;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.55);
-      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      padding: 20px;
+      /* FONDO: Porsche negro en estudio oscuro */
+     background: url("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1920&auto=format&fit=crop");
+      background-size: cover;
+      background-position: center;
+      background-color: #050505;
     }
 
-    .login-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 34px rgba(37, 99, 235, 0.65);
-    }
-
-    .login-error {
-      min-height: 16px;
-      font-size: 0.78rem;
-      color: #fecaca;
-      margin-top: 6px;
-    }
-
-    .login-foot {
-      margin-top: 12px;
-      font-size: 0.72rem;
-      color: #9ca3af;
-      text-align: center;
-    }
-
-    /* ===== APP ===== */
-
-    .app-shell {
-      width: 100%;
-      max-width: 1100px;
-      padding: 20px 12px 32px;
-      margin: 0 auto;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 16px;
-      padding: 18px 18px 22px;
-      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.18);
-      border: 1px solid #e5e7eb;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .title {
-      font-size: 1.4rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #111827;
-    }
-
-    .title-badge {
-      font-size: 0.75rem;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22c55e, #3b82f6);
-      color: #ffffff;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-top: 2px;
-    }
-
-    .stats-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .stat-pill {
-      flex: 1;
-      min-width: 140px;
-      font-size: 0.8rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #374151;
-    }
-
-    .stat-label {
-      opacity: 0.7;
-    }
-
-    .stat-value {
-      font-weight: 600;
-    }
-
-    .btn-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .btn-small {
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      background: #f9fafb;
-      padding: 6px 10px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .btn-small:hover {
-      background: #e5e7eb;
-    }
-
-    /* FORMULARIO */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    @media (max-width: 900px) {
-      .form-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 600px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .field-label {
-      font-size: 0.8rem;
-      color: #4b5563;
-    }
-
-    .field-label span {
-      color: #dc2626;
-      font-weight: bold;
-      margin-left: 3px;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    input[type="date"],
-    textarea {
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      background: #f9fafb;
-      padding: 7px 9px;
-      font-size: 0.9rem;
-      color: #111827;
-      outline: none;
-      transition: border-color 0.16s, box-shadow 0.16s, background 0.16s;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25);
-      background: #ffffff;
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 38px;
-      max-height: 120px;
-    }
-
-    .actions-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .left-actions,
-    .right-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 999px;
-      padding: 7px 13px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: transform 0.08s, box-shadow 0.08s, background 0.16s, opacity 0.16s;
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: #ffffff;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.45);
-    }
-
-    .btn-secondary {
-      background: #f9fafb;
-      color: #111827;
-      border: 1px solid #d1d5db;
-    }
-
-    .btn-secondary:hover {
-      background: #e5e7eb;
-    }
-
-    .btn-danger {
-      background: #fef2f2;
-      color: #b91c1c;
-      border: 1px solid #fecaca;
-    }
-
-    .btn-danger:hover {
-      background: #fee2e2;
-    }
-
-    .btn-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  padding: 0;
-  justify-content: center;
-  font-size: 1.1rem; /* icono más grande */
-}
-
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: none;
-    }
-
-    .search-input {
-      position: relative;
-    }
-
-    .search-input input {
-      padding-left: 26px;
-      font-size: 0.85rem;
-    }
-
-    .search-input span {
+    /* Capa oscura sutil sobre la imagen para resaltar el login */
+    .login-shell::before {
+      content: "";
       position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.75rem;
-      color: #9ca3af;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4); 
       pointer-events: none;
     }
 
-    /* FILTRO FECHAS */
-    .filters-row {
+    .login-card {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 380px;
+      /* Fondo azul muy oscuro / casi negro como la imagen */
+      background: #111827; 
+      border: 1px solid #1f2937;
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+    }
+
+    /* ICONO SVG PERSONALIZADO (Auto + Pistola) */
+    .login-icon-svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 15px;
+      stroke: #ffffff;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .login-title {
+      color: #ffffff;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 35px 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .input-wrapper {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-wrapper label {
+      color: #9ca3af; /* Gris azulado */
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-left: 2px;
+      margin-bottom: 8px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 8px;
+      border: 1px solid #374151; /* Borde sutil */
+      background: #1f2937; /* Fondo input oscuro */
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    
+    .login-input:focus {
+      border-color: #ef4444; /* Rojo al seleccionar */
+      background: #374151;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      background: #ef4444; /* Rojo deportivo */
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-top: 15px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      transition: background 0.2s;
+    }
+    .btn-login:hover { background: #dc2626; }
+
+    /* ===== APP (ESTILOS ORIGINALES) ===== */
+    .app-shell {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 15px;
+      display: none; 
+      padding-bottom: 80px; 
+    }
+
+    .top-bar {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
+      justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-      padding: 8px 10px;
+      margin-bottom: 20px;
+      position: relative;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .app-logo { 
+      position: absolute; 
+      left: 50%; 
+      transform: translateX(-50%);
+      font-size: 1.4rem; 
+      font-weight: 800; 
+      color: #1e293b; 
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .btn-logout { 
+      background: white; 
+      border: 1px solid #cbd5e1; 
+      padding: 8px 12px; 
+      border-radius: 6px; 
+      font-size: 0.7rem; 
+      font-weight: 700; 
+      color: #64748b;
+      margin-left: auto;
+      text-transform: uppercase;
+    }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: white;
+      padding: 15px 5px;
       border-radius: 12px;
-      background: #f3f4f6;
-      border: 1px solid #e5e7eb;
-      font-size: 0.8rem;
-      color: #4b5563;
+      text-align: center;
+      border: 1px solid #e2e8f0;
+    }
+    .stat-num { font-size: 1.5rem; font-weight: 800; color: #0f172a; line-height: 1; }
+    .stat-txt { font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-top:5px; }
+
+    /* FORMULARIO */
+    .main-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+      border: 1px solid #e2e8f0;
     }
 
-    .filters-row small {
+    .form-row { display: flex; gap: 12px; margin-bottom: 15px; }
+    .col-half { flex: 1; }
+    .col-full { width: 100%; margin-bottom: 15px; }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: #64748b;
+      margin-bottom: 6px;
+      margin-left: 4px;
+      text-transform: uppercase;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      font-size: 16px; 
+      background: #f8fafc;
+      outline: none;
+      appearance: none;
+      color: #1e293b;
       font-weight: 500;
-      margin-right: 2px;
+    }
+    input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+
+    .btn-save {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
 
-    .filters-row input[type="date"] {
-      font-size: 0.8rem;
-      padding: 5px 8px;
+    /* HERRAMIENTAS */
+    .tools-section {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .search-row { margin-bottom: 12px; }
+    .date-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .date-input { flex: 1; padding: 10px; font-size: 0.85rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;}
+
+    .export-row { display: flex; gap: 8px; }
+    .btn-tool {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
     }
 
     /* TABLA */
     .table-wrapper {
-      margin-top: 6px;
+      background: white;
       border-radius: 12px;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
       overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
     }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.82rem;
-      min-width: 720px;
-    }
-
-    thead {
-      background: #f3f4f6;
-    }
-
-    th,
-    td {
-      padding: 7px 9px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    th {
-      font-weight: 600;
-      color: #4b5563;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      letter-spacing: 0.04em;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #f9fafb;
-    }
-
-    tbody tr:hover {
-      background: #e0f2fe;
-    }
-
-    .tag {
-      display: inline-flex;
-      padding: 3px 7px;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
-      font-weight: 500;
-    }
-
-    .actions-cell {
-      display: flex;
-      gap: 6px;
-      flex-wrap: nowrap;
-    }
-
-    .empty-row {
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    
+    th, td {
       text-align: center;
-      padding: 14px 0;
-      color: #9ca3af;
+      vertical-align: middle;
+      padding: 14px 10px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.85rem;
+    }
+    thead { background: #f1f5f9; }
+    th { color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight:800; }
+    
+    .cell-detalle {
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-style: italic;
+      color: #64748b;
     }
 
-    /* TOASTS */
-    .toast-container {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      z-index: 9999;
-    }
+    tbody tr:first-child { background-color: #fef2f2; }
+    tbody tr:first-child td { font-weight: 600; color: var(--primary); }
+    tbody tr:first-child .cell-detalle { font-weight: 400; color: #ef4444; }
 
-    .toast {
-      min-width: 220px;
-      max-width: 320px;
-      padding: 7px 10px;
-      border-radius: 12px;
-      font-size: 0.78rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
-      animation: slideIn 0.16s ease-out;
-    }
+    .placa-tag { background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #e2e8f0; font-size: 0.8rem; font-weight: 700; color: #334155; }
+    .btn-act { background: none; border: none; font-size: 1.2rem; padding: 5px; cursor: pointer; }
+    
+    #loginError { color: #fca5a5; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
 
-    .toast-success {
-      border-color: #bbf7d0;
-      background: #f0fdf4;
-    }
-
-    .toast-error {
-      border-color: #fecaca;
-      background: #fef2f2;
-    }
-
-    .toast span.icon {
-      font-size: 1rem;
-    }
-
-    @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(8px) translateY(-4px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0) translateY(0);
-      }
-    }
-
-    @media (max-width: 640px) {
-      .card {
-        padding: 14px 12px 18px;
-      }
-      .title {
-        font-size: 1.15rem;
-      }
-      .subtitle {
-        font-size: 0.8rem;
-      }
-      .table-wrapper {
-        border-radius: 10px;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- LOGIN -->
+
   <div id="loginWrapper" class="login-shell">
     <div class="login-card">
-      <div class="login-title">
-        🚗  Pintura
-        
-      </div>
-     
-
-      <div class="login-field">
-        <label class="login-label">Correo</label>
-        <input id="loginEmail" type="email" class="login-input" placeholder="ej. destajo@taller.com" />
-      </div>
-
-      <div class="login-field">
-        <label class="login-label">Contraseña</label>
-        <input id="loginPassword" type="password" class="login-input" placeholder="Tu contraseña" />
-      </div>
-
-      <button id="btnLogin" class="login-btn">
-        Entrar
-      </button>
-
-      <div id="loginError" class="login-error"></div>
-
       
+    
+        <path d="M20 50 L30 35 L70 35 L80 50" stroke="white" stroke-width="3" fill="none"/>
+        <path d="M20 50 L20 70 L80 70 L80 50" stroke="white" stroke-width="3" fill="none"/>
+        <rect x="25" y="55" width="10" height="8" stroke="white" stroke-width="2" fill="none"/>
+        <rect x="65" y="55" width="10" height="8" stroke="white" stroke-width="2" fill="none"/>
+        <line x1="40" y1="55" x2="60" y2="55" stroke="white" stroke-width="2"/>
+        <line x1="40" y1="60" x2="60" y2="60" stroke="white" stroke-width="2"/>
+        <line x1="40" y1="65" x2="60" y2="65" stroke="white" stroke-width="2"/>
+        
+        <path d="M75 25 L75 15 L95 15 L95 25 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M85 25 L85 40" stroke="white" stroke-width="3"/> <path d="M70 40 L100 40 L100 50 L90 50 L90 70 L80 70 L80 50 L70 50 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M70 40 L60 30" stroke="white" stroke-width="2"/> <path d="M65 45 L55 45" stroke="white" stroke-width="2"/> </svg>
+
+      <h1 class="login-title">PINTURA</h1>
+      
+      <div class="input-wrapper">
+        <label>Correo</label>
+        <input type="email" id="loginEmail" class="login-input" />
+      </div>
+      
+      <div class="input-wrapper">
+        <label>Contraseña</label>
+        <input type="password" id="loginPassword" class="login-input" />
+      </div>
+
+      <button id="btnLogin" class="btn-login">ENTRAR</button>
+      <div id="loginError"></div>
     </div>
   </div>
 
-  <!-- APP -->
-  <div id="appWrapper" style="display:none;">
-    <div class="app-shell">
-      <div class="card">
-        <div class="header">
-          <div>
-            <div class="title">
-              🚗PINTURA
-              
-            </div>
-          
-          </div>
-          <div class="btn-header">
-            <button class="btn-small" id="btnLogout">⏏ Cerrar sesión</button>
-          </div>
-        </div>
+  <div id="appWrapper" class="app-shell">
+    
+    <div class="top-bar">
+      <div class="app-logo">PINTURA</div>
+      <button id="btnLogout" class="btn-logout">Salir</button>
+    </div>
 
-        <div class="stats-row">
-          <div class="stat-pill">
-            <span class="stat-label">Registros totales</span>
-            <span class="stat-value" id="statTotal">0</span>
-          </div>
-          <div class="stat-pill">
-            <span class="stat-label">Última orden</span>
-            <span class="stat-value" id="statUltima">—</span>
-          </div>
-          <div class="stat-pill">
-            <span class="stat-label">Modo</span>
-            <span class="stat-value" id="statModo">Nuevo registro</span>
-          </div>
-        </div>
-
-        <!-- FORMULARIO -->
-        <div class="form-grid">
-          <div class="field-group">
-            <label class="field-label">Auto <span>*</span></label>
-            <input type="text" id="inputAuto" placeholder="Ej. VERSA, TIDA, TIGUAN..." autocomplete="off" />
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Color <span>*</span></label>
-            <input type="text" id="inputColor" placeholder="Ej. BLANCO, PLATA, ARENA..." autocomplete="off" />
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Orden <span>*</span></label>
-            <input type="number" id="inputOrden" placeholder="Ej. 13203" autocomplete="off" />
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">Detalle / Trabajo</label>
-            <textarea id="inputDetalle" placeholder="Ej. solo rin, 2 rines, complemento..."></textarea>
-          </div>
-
-          <!-- NUEVO: PLACA -->
-          <div class="field-group">
-            <label class="field-label">Placa</label>
-            <input type="text" id="inputPlaca" placeholder="Ej. ABC-123-A" autocomplete="off" />
-          </div>
-        </div>
-
-        <div class="actions-row">
-          <div class="left-actions">
-            <button class="btn btn-primary" id="btnGuardar">
-              💾 Guardar
-            </button>
-            <button class="btn btn-secondary" id="btnLimpiar" type="button">
-              🔁 Limpiar
-            </button>
-          </div>
-
-          <div class="right-actions">
-            <div class="search-input">
-              <span>🔍</span>
-              <input
-                type="number"
-                id="inputBuscarOrden"
-                placeholder="Buscar por número de orden"
-              />
-            </div>
-            <button class="btn btn-secondary" id="btnExportarCSV" type="button">
-              📄 CSV
-            </button>
-            <button class="btn btn-secondary" id="btnExportarPDF" type="button">
-              🧾 PDF
-            </button>
-          </div>
-        </div>
-
-        <!-- FILTRO POR FECHAS -->
-        <div class="filters-row">
-          <small>Filtrar por fecha (automática):</small>
-          <span>Del</span>
-          <input type="date" id="inputFechaDesde" />
-          <span>al</span>
-          <input type="date" id="inputFechaHasta" />
-          <button class="btn btn-secondary" id="btnAplicarFiltros" type="button">
-            🔎 Aplicar filtro
-          </button>
-          <button class="btn btn-secondary" id="btnLimpiarFiltros" type="button">
-            ❌ Limpiar filtro
-          </button>
-        </div>
-
-        <!-- TABLA -->
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>AUTO</th>
-                <th>COLOR</th>
-                <th>ORDEN</th>
-                <th>DETALLE</th>
-                <th>PLACA</th>
-                <th>FECHA</th>
-                <th style="width:110px;">ACCIONES</th>
-              </tr>
-            </thead>
-            <tbody id="tbodyRegistros">
-              <tr>
-                <td class="empty-row" colspan="7">
-                  No hay registros todavía. Captura el primero arriba 👆
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-num" id="statTotal">0</div>
+        <div class="stat-txt">Total</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="statUltimo">—</div>
+        <div class="stat-txt">Último</div>
+      </div>
+      <div class="stat-box" style="background:#fff1f2; border-color:#fecaca;">
+        <div class="stat-num" id="statSemana" style="color:var(--primary); font-size:0.7rem; line-height:2; font-weight:700;">...</div>
+        <div class="stat-txt" style="color:var(--primary);">Vista</div>
       </div>
     </div>
+
+    <div class="main-card">
+      <div class="form-row">
+        <div class="col-half">
+          <label>AUTO *</label>
+          <input type="text" id="inputAuto" placeholder="Ej. MUSTANG" />
+        </div>
+        <div class="col-half">
+          <label>COLOR *</label>
+          <input type="text" id="inputColor" placeholder="Ej. PLATA" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="col-half">
+          <label>ORDEN *</label>
+          <input type="tel" id="inputOrden" placeholder="12345" />
+        </div>
+        <div class="col-half">
+          <label>PLACA</label>
+          <input type="text" id="inputPlaca" placeholder="ABC-123" autocapitalize="characters" />
+        </div>
+      </div>
+
+      <div class="col-full">
+        <label>DETALLE DEL TRABAJO</label>
+        <textarea id="inputDetalle" rows="2" placeholder="Piezas a pintar, reparaciones..."></textarea>
+      </div>
+
+      <button id="btnGuardar" class="btn-save">💾 GUARDAR</button>
+      <button id="btnLimpiar" style="width:100%; padding:12px; margin-top:10px; background:none; border:none; color:#94a3b8; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Limpiar Campos</button>
+    </div>
+
+    <div class="tools-section">
+      <div class="search-row">
+        <input type="number" id="inputBuscar" placeholder="🔍 Buscar orden histórica..." style="background:#f8fafc; font-weight:600;" />
+      </div>
+
+      <div class="date-row">
+        <input type="date" id="dateDesde" class="date-input" />
+        <span style="color:#64748b; font-size:0.7rem; font-weight:800;">AL</span>
+        <input type="date" id="dateHasta" class="date-input" />
+      </div>
+
+      <div class="export-row">
+        <button id="btnLimpiarFiltros" class="btn-tool">❌ Filtro</button>
+        <button id="btnCSV" class="btn-tool">📊 CSV</button>
+        <button id="btnPDF" class="btn-tool">📄 PDF</button>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th width="30">#</th>
+            <th>AUTO</th>
+            <th>COLOR</th>
+            <th>ORDEN</th>
+            <th>PLACA</th>
+            <th>DETALLE</th> <th>FECHA</th>
+            <th width="60"></th>
+          </tr>
+        </thead>
+        <tbody id="tbodyRegistros"></tbody>
+      </table>
+    </div>
+
   </div>
 
-  <!-- TOASTS -->
-  <div class="toast-container" id="toastContainer"></div>
-
-  <!-- jsPDF + AutoTable -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
-  <!-- FIREBASE & LÓGICA APP -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      onSnapshot,
-      query,
-      orderBy,
-      updateDoc,
-      deleteDoc,
-      doc,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCFzS_kJPxulB7JMkL6C0lwncUcf5YJ2sc",
@@ -761,440 +452,222 @@ background-size: cover;
       projectId: "destajo-hojalateria",
       storageBucket: "destajo-hojalateria.firebasestorage.app",
       messagingSenderId: "313174097212",
-      appId: "1:313174097212:web:73f75a346000acd96db239",
-      measurementId: "G-8FZJXY8753"
+      appId: "1:313174097212:web:73f75a346000acd96db239"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const registrosCol = collection(db, "registros");
+    const colRef = collection(db, "registros");
 
-    // Estado
-    let registros = [];
-    let vistaActual = [];
-    let editingId = null;
-    let listenerStarted = false;
+    let allDocs = [];
+    let viewDocs = []; 
+    let editId = null;
 
-    // DOM login
-    const loginWrapper = document.getElementById("loginWrapper");
-    const appWrapper   = document.getElementById("appWrapper");
-
-    const loginEmail    = document.getElementById("loginEmail");
-    const loginPassword = document.getElementById("loginPassword");
-    const btnLogin      = document.getElementById("btnLogin");
-    const loginError    = document.getElementById("loginError");
-    const btnLogout     = document.getElementById("btnLogout");
-
-    // DOM app
-    const inputAuto = document.getElementById("inputAuto");
-    const inputColor = document.getElementById("inputColor");
-    const inputOrden = document.getElementById("inputOrden");
-    const inputDetalle = document.getElementById("inputDetalle");
-    const inputPlaca = document.getElementById("inputPlaca");
-
-    const inputBuscarOrden = document.getElementById("inputBuscarOrden");
-    const inputFechaDesde = document.getElementById("inputFechaDesde");
-    const inputFechaHasta = document.getElementById("inputFechaHasta");
-
-    const btnGuardar = document.getElementById("btnGuardar");
-    const btnLimpiar = document.getElementById("btnLimpiar");
-    const btnAplicarFiltros = document.getElementById("btnAplicarFiltros");
-    const btnLimpiarFiltros = document.getElementById("btnLimpiarFiltros");
-    const btnExportarCSV = document.getElementById("btnExportarCSV");
-    const btnExportarPDF = document.getElementById("btnExportarPDF");
-
-    const tbodyRegistros = document.getElementById("tbodyRegistros");
-    const statTotal = document.getElementById("statTotal");
-    const statUltima = document.getElementById("statUltima");
-    const statModo = document.getElementById("statModo");
-    const toastContainer = document.getElementById("toastContainer");
-
-    // Utilidad fecha hoy
-    function hoyISO() {
+    const el = (id) => document.getElementById(id);
+    
+    const getHoy = () => {
       const d = new Date();
-      const off = d.getTimezoneOffset();
-      const local = new Date(d.getTime() - off * 60 * 1000);
-      return local.toISOString().slice(0, 10);
-    }
+      const off = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - off).toISOString().slice(0,10);
+    };
 
-    // Mostrar login / app
-    function showApp() {
-      loginWrapper.style.display = "none";
-      appWrapper.style.display = "block";
-    }
+    const getViernesInicio = () => {
+      const d = new Date();
+      d.setHours(0,0,0,0);
+      const day = d.getDay(); 
+      const sub = (day >= 5) ? (day - 5) : (day + 2);
+      d.setDate(d.getDate() - sub);
+      const off = d.getTimezoneOffset() * 60000;
+      return new Date(d.getTime() - off).toISOString().slice(0,10);
+    };
 
-    function showLogin() {
-      appWrapper.style.display = "none";
-      loginWrapper.style.display = "flex";
-    }
+    function render(lista) {
+      viewDocs = lista; 
+      const tb = el("tbodyRegistros");
+      tb.innerHTML = "";
+      el("statTotal").textContent = lista.length;
+      el("statUltimo").textContent = lista.length ? lista[0].orden : "—";
 
-    // TOAST
-    function showToast(message, type = "success") {
-      const toast = document.createElement("div");
-      toast.className = `toast ${type === "error" ? "toast-error" : "toast-success"}`;
-      const iconSpan = document.createElement("span");
-      iconSpan.className = "icon";
-      iconSpan.textContent = type === "error" ? "⚠️" : "✅";
-      const msgSpan = document.createElement("span");
-      msgSpan.textContent = message;
-      toast.appendChild(iconSpan);
-      toast.appendChild(msgSpan);
-      toastContainer.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transition = "opacity 0.2s";
-        setTimeout(() => toast.remove(), 220);
-      }, 2600);
-    }
-
-    // TABLA
-    function renderTabla(lista) {
-      tbodyRegistros.innerHTML = "";
-
-      if (!lista || lista.length === 0) {
-        const tr = document.createElement("tr");
-        const td = document.createElement("td");
-        td.colSpan = 7;
-        td.className = "empty-row";
-        td.textContent = "No se encontraron registros con los filtros actuales.";
-        tr.appendChild(td);
-        tbodyRegistros.appendChild(tr);
+      if(!lista.length) {
+        tb.innerHTML = `<tr><td colspan="8" style="padding:30px; color:#94a3b8; font-weight:600;">Sin registros</td></tr>`;
         return;
       }
 
-      lista.forEach((reg) => {
+      lista.forEach((r, i) => {
         const tr = document.createElement("tr");
-
-        const tdAuto = document.createElement("td");
-        const tdColor = document.createElement("td");
-        const tdOrden = document.createElement("td");
-        const tdDetalle = document.createElement("td");
-        const tdPlaca = document.createElement("td");
-        const tdFecha = document.createElement("td");
-        const tdAcciones = document.createElement("td");
-        tdAcciones.className = "actions-cell";
-
-        tdAuto.innerHTML = `<span class="tag">${reg.auto || ""}</span>`;
-        tdColor.textContent = reg.color || "";
-        tdOrden.textContent = reg.orden || "";
-        tdDetalle.textContent = reg.detalle || "";
-        tdPlaca.textContent = reg.placa || "";
-        tdFecha.textContent = reg.fecha || "";
-
-        const btnEdit = document.createElement("button");
-        btnEdit.className = "btn btn-secondary btn-icon";
-        btnEdit.title = "Editar";
-        btnEdit.textContent = "✏️";
-        btnEdit.addEventListener("click", () => cargarEnFormulario(reg));
-
-        const btnDel = document.createElement("button");
-        btnDel.className = "btn btn-danger btn-icon";
-        btnDel.title = "Eliminar";
-        btnDel.textContent = "🗑️";
-        btnDel.addEventListener("click", () => eliminarRegistro(reg.id));
-
-        tdAcciones.appendChild(btnEdit);
-        tdAcciones.appendChild(btnDel);
-
-        tr.appendChild(tdAuto);
-        tr.appendChild(tdColor);
-        tr.appendChild(tdOrden);
-        tr.appendChild(tdDetalle);
-        tr.appendChild(tdPlaca);
-        tr.appendChild(tdFecha);
-        tr.appendChild(tdAcciones);
-
-        tbodyRegistros.appendChild(tr);
+        tr.innerHTML = `
+          <td style="color:#94a3b8;">${i+1}</td>
+          <td style="font-weight:700;">${r.auto}</td>
+          <td>${r.color}</td>
+          <td style="font-weight:800; color:var(--primary);">${r.orden}</td>
+          <td>${r.placa ? `<span class="placa-tag">${r.placa}</span>` : '—'}</td>
+          <td class="cell-detalle" title="${r.detalle}">${r.detalle || '-'}</td>
+          <td style="font-size:0.8rem; font-weight:600;">${r.fecha.slice(5)}</td>
+          <td>
+            <div style="display:flex; justify-content:center; gap:8px;">
+              <button class="btn-act" onclick="window.edit('${r.id}')">✏️</button>
+              <button class="btn-act" onclick="window.del('${r.id}')" style="color:var(--primary);">🗑️</button>
+            </div>
+          </td>
+        `;
+        tb.appendChild(tr);
       });
     }
 
-    // FORM
-    function limpiarFormulario() {
-      inputAuto.value = "";
-      inputColor.value = "";
-      inputOrden.value = "";
-      inputDetalle.value = "";
-      inputPlaca.value = "";
-      editingId = null;
-      btnGuardar.textContent = "💾 Guardar";
-      statModo.textContent = "Nuevo registro";
-    }
+    function filtrar() {
+      const term = el("inputBuscar").value.trim();
+      const desde = el("dateDesde").value;
+      const hasta = el("dateHasta").value;
+      const inicioSemana = getViernesInicio();
 
-    function cargarEnFormulario(reg) {
-      inputAuto.value = reg.auto || "";
-      inputColor.value = reg.color || "";
-      inputOrden.value = reg.orden || "";
-      inputDetalle.value = reg.detalle || "";
-      inputPlaca.value = reg.placa || "";
-      editingId = reg.id;
-      btnGuardar.textContent = "✅ Actualizar";
-      statModo.textContent = "Editando orden " + (reg.orden || "");
-      inputAuto.focus();
-    }
+      let data = [...allDocs];
+      let modo = "Semanal";
 
-    async function guardarRegistro() {
-      const auto = inputAuto.value.trim().toUpperCase();
-      const color = inputColor.value.trim().toUpperCase();
-      const orden = inputOrden.value.trim();
-      const detalle = inputDetalle.value.trim();
-      const placa = inputPlaca.value.trim().toUpperCase();
-      const fecha = hoyISO();
-
-      if (!auto || !color || !orden) {
-        showToast("Por favor llena AUTO, COLOR y ORDEN.", "error");
-        return;
+      if (term) {
+        data = data.filter(r => String(r.orden).includes(term));
+        modo = "Búsqueda";
+      } else if (desde || hasta) {
+        if(desde) data = data.filter(r => r.fecha >= desde);
+        if(hasta) data = data.filter(r => r.fecha <= hasta);
+        modo = "Fechas";
+      } else {
+        data = data.filter(r => r.fecha >= inicioSemana);
+        modo = "Viernes " + inicioSemana.slice(8);
       }
 
+      el("statSemana").textContent = modo;
+      render(data);
+    }
+
+    el("btnGuardar").onclick = async () => {
+      const auto = el("inputAuto").value.trim().toUpperCase();
+      const color = el("inputColor").value.trim().toUpperCase();
+      const orden = el("inputOrden").value.trim();
+      
+      if(!auto || !orden) return alert("Falta Auto u Orden");
+
+      const datos = {
+        auto, color, orden,
+        placa: el("inputPlaca").value.trim().toUpperCase(),
+        detalle: el("inputDetalle").value.trim(),
+        fecha: getHoy()
+      };
+
       try {
-        if (editingId) {
-          const ref = doc(db, "registros", editingId);
-          await updateDoc(ref, { auto, color, orden, detalle, placa });
-          showToast("Registro actualizado correctamente.");
+        if(editId) {
+          await updateDoc(doc(db, "registros", editId), datos);
+          alert("Registro actualizado");
         } else {
-          await addDoc(registrosCol, {
-            auto,
-            color,
-            orden,
-            detalle,
-            placa,
-            fecha,
-            createdAt: serverTimestamp()
-          });
-          showToast("Registro guardado en Firestore.");
+          await addDoc(colRef, { ...datos, createdAt: serverTimestamp() });
         }
-        limpiarFormulario();
-      } catch (err) {
-        console.error(err);
-        showToast("Error al guardar. Revisa la consola.", "error");
-      }
+        limpiar();
+      } catch(e) { alert(e.message); }
+    };
+
+    function limpiar() {
+      el("inputAuto").value=""; el("inputColor").value="";
+      el("inputOrden").value=""; el("inputPlaca").value="";
+      el("inputDetalle").value="";
+      editId = null;
+      el("btnGuardar").textContent = "💾 GUARDAR";
+      el("btnGuardar").style.background = "var(--primary)";
+      window.scrollTo(0,0);
     }
+    
+    window.edit = (id) => {
+      const r = allDocs.find(x => x.id === id);
+      el("inputAuto").value=r.auto; el("inputColor").value=r.color;
+      el("inputOrden").value=r.orden; el("inputPlaca").value=r.placa;
+      el("inputDetalle").value=r.detalle;
+      editId = id;
+      el("btnGuardar").textContent = "ACTUALIZAR";
+      el("btnGuardar").style.background = "#f59e0b";
+      window.scrollTo(0,0);
+    };
 
-    async function eliminarRegistro(id) {
-      const ok = confirm("¿Seguro que deseas eliminar este registro?");
-      if (!ok) return;
-      try {
-        const ref = doc(db, "registros", id);
-        await deleteDoc(ref);
-        showToast("Registro eliminado.");
-      } catch (err) {
-        console.error(err);
-        showToast("Error al eliminar.", "error");
-      }
-    }
+    window.del = async (id) => {
+      if(confirm("¿Eliminar registro?")) await deleteDoc(doc(db, "registros", id));
+    };
 
-    // FILTROS
-    function aplicarFiltros() {
-      const qOrden = inputBuscarOrden.value.trim();
-      const desde = inputFechaDesde.value;
-      const hasta = inputFechaHasta.value;
-
-      let lista = registros.slice();
-
-      if (desde) {
-        lista = lista.filter((r) => r.fecha && r.fecha >= desde);
-      }
-      if (hasta) {
-        lista = lista.filter((r) => r.fecha && r.fecha <= hasta);
-      }
-      if (qOrden) {
-        lista = lista.filter((r) => String(r.orden || "").includes(qOrden));
-      }
-
-      vistaActual = lista;
-      renderTabla(lista);
-    }
-
-    function limpiarFiltros() {
-      inputFechaDesde.value = "";
-      inputFechaHasta.value = "";
-      inputBuscarOrden.value = "";
-      aplicarFiltros();
-    }
+    el("btnLimpiar").onclick = limpiar;
+    el("inputBuscar").addEventListener("input", filtrar);
+    el("dateDesde").addEventListener("change", filtrar);
+    el("dateHasta").addEventListener("change", filtrar);
+    
+    el("btnLimpiarFiltros").onclick = () => {
+      el("dateDesde").value = "";
+      el("dateHasta").value = "";
+      el("inputBuscar").value = "";
+      filtrar();
+    };
 
     // CSV
-    function exportarCSV() {
-      if (!vistaActual.length) {
-        showToast("No hay datos para exportar (revisa filtros).", "error");
-        return;
-      }
-
-      const encabezados = ["AUTO", "COLOR", "ORDEN", "DETALLE", "PLACA", "FECHA"];
-      const filas = vistaActual.map((r) => [
-        r.auto || "",
-        r.color || "",
-        r.orden || "",
-        (r.detalle || "").replace(/\n/g, " "),
-        r.placa || "",
-        r.fecha || ""
+    el("btnCSV").onclick = () => {
+      if(!viewDocs.length) return alert("Sin datos");
+      const headers = ["AUTO","COLOR","ORDEN","PLACA","DETALLE","FECHA"];
+      const rows = viewDocs.map(r => [
+        r.auto, r.color, r.orden, r.placa, (r.detalle||"").replace(/\n/g," "), r.fecha
       ]);
+      let csv = headers.join(",") + "\n" + rows.map(r => r.map(c => `"${c || ''}"`).join(",")).join("\n");
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(new Blob([csv], {type: "text/csv;charset=utf-8;"}));
+      link.download = "registros_pintura.csv";
+      link.click();
+    };
 
-      let csv = encabezados.join(",") + "\n";
-      filas.forEach((fila) => {
-        const linea = fila
-          .map((campo) => `"${String(campo).replace(/"/g, '""')}"`)
-          .join(",");
-        csv += linea + "\n";
-      });
+    // PDF
+    el("btnPDF").onclick = () => {
+       if(!viewDocs.length) return alert("Sin datos");
+       const { jsPDF } = window.jspdf;
+       const doc = new jsPDF();
+       
+       doc.setFontSize(16);
+       doc.text("Pintura", 105, 20, null, null, "center");
+       
+       const fechas = viewDocs.map(r => r.fecha).sort();
+       const rango = fechas.length > 1 
+         ? `Del ${fechas[0]} al ${fechas[fechas.length-1]}` 
+         : `Fecha: ${fechas[0] || getHoy()}`;
+       
+       doc.setFontSize(10);
+       doc.text(rango, 105, 28, null, null, "center");
 
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      const ahora = new Date();
-      const nombre =
-        "destajo_registros_" +
-        ahora.toISOString().slice(0, 10).replace(/-/g, "") +
-        ".csv";
-      a.download = nombre;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+       const body = viewDocs.map(r => [r.auto, r.color, r.orden, r.placa, r.detalle, r.fecha]);
+       
+       doc.autoTable({ 
+         head:[["AUTO","COLOR","ORDEN","PLACA","DETALLE","FECHA"]], 
+         body: body, 
+         startY: 35,
+         headStyles: { fillColor: [239, 68, 68] },
+         columnStyles: { 4: { cellWidth: 50 } } 
+       });
+       doc.save("reporte_pintura.pdf");
+    };
 
-      showToast("CSV generado. Ábrelo con Excel.");
-    }
+    el("btnLogout").onclick = () => signOut(auth);
+    el("btnLogin").onclick = async () => {
+      try { await signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value); }
+      catch(e) { el("loginError").textContent = "Credenciales incorrectas"; }
+    };
 
-    // PDF (título Pintura + fecha + tabla)
-    function exportarPDF() {
-      if (!vistaActual.length) {
-        showToast("No hay datos para PDF (revisa filtros).", "error");
-        return;
-      }
-
-      const { jsPDF } = window.jspdf;
-      const docPDF = new jsPDF("p", "pt", "a4");
-
-      const hoy = new Date();
-      const hoyStr = hoy.toISOString().slice(0, 10);
-
-      // Título
-      docPDF.setFontSize(18);
-      docPDF.text("Pintura", 40, 50);
-
-      // Fecha
-      docPDF.setFontSize(11);
-      docPDF.text("Fecha: " + hoyStr, 40, 70);
-
-      const cuerpo = vistaActual.map((r) => [
-        r.auto || "",
-        r.color || "",
-        r.orden || "",
-        (r.detalle || "").replace(/\n/g, " "),
-        r.placa || "",
-        r.fecha || ""
-      ]);
-
-      docPDF.autoTable({
-        head: [["AUTO", "COLOR", "ORDEN", "DETALLE", "PLACA", "FECHA"]],
-        body: cuerpo,
-        startY: 90,
-        styles: { fontSize: 8, cellPadding: 3 },
-        headStyles: { fillColor: [37, 99, 235], textColor: 255 }
-      });
-
-      const nombre =
-        "destajo_pintura_" + hoyStr.replace(/-/g, "") + ".pdf";
-      docPDF.save(nombre);
-
-      showToast("PDF generado y descargado.");
-    }
-
-    // LISTENER Firestore
-    function iniciarListener() {
-      const qReg = query(registrosCol, orderBy("createdAt", "desc"));
-      onSnapshot(
-        qReg,
-        (snapshot) => {
-          registros = snapshot.docs.map((d) => {
-            const data = d.data();
-            let fecha = data.fecha;
-            if (!fecha && data.createdAt && data.createdAt.toDate) {
-              const dt = data.createdAt.toDate();
-              fecha = dt.toISOString().slice(0, 10);
-            }
-            return {
-              id: d.id,
-              ...data,
-              fecha: fecha || ""
-            };
-          });
-
-          statTotal.textContent = registros.length;
-          if (registros.length > 0) {
-            statUltima.textContent = registros[0].orden || "—";
-          } else {
-            statUltima.textContent = "—";
-          }
-
-          aplicarFiltros();
-        },
-        (error) => {
-          console.error("Error listener:", error);
-          showToast("Error leyendo datos de Firestore.", "error");
-        }
-      );
-    }
-
-    // LOGIN EVENTS
-    btnLogin.addEventListener("click", async () => {
-      const email = loginEmail.value.trim();
-      const pass = loginPassword.value;
-
-      loginError.textContent = "";
-
-      if (!email || !pass) {
-        loginError.textContent = "Ingresa correo y contraseña.";
-        return;
-      }
-
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        // onAuthStateChanged hará el resto
-      } catch (err) {
-        console.error(err);
-        loginError.textContent = "Correo o contraseña incorrectos.";
-      }
-    });
-
-    btnLogout.addEventListener("click", () => {
-      signOut(auth);
-    });
-
-    // AUTH STATE
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        showApp();
-        if (!listenerStarted) {
-          iniciarListener();
-          listenerStarted = true;
-        }
+      if(user) {
+        el("loginWrapper").style.display = "none";
+        el("appWrapper").style.display = "block";
+        onSnapshot(query(colRef, orderBy("createdAt", "desc")), (snap) => {
+          allDocs = snap.docs.map(d => {
+             let f = d.data().fecha;
+             if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
+             return {id: d.id, ...d.data(), fecha: f||""};
+          });
+          filtrar();
+        });
       } else {
-        showLogin();
+        el("loginWrapper").style.display = "flex";
+        el("appWrapper").style.display = "none";
       }
     });
-
-    // EVENTOS APP
-    btnGuardar.addEventListener("click", (e) => {
-      e.preventDefault();
-      guardarRegistro();
-    });
-
-    btnLimpiar.addEventListener("click", (e) => {
-      e.preventDefault();
-      limpiarFormulario();
-    });
-
-    inputBuscarOrden.addEventListener("input", aplicarFiltros);
-    btnAplicarFiltros.addEventListener("click", aplicarFiltros);
-    btnLimpiarFiltros.addEventListener("click", (e) => {
-      e.preventDefault();
-      limpiarFiltros();
-    });
-
-    btnExportarCSV.addEventListener("click", exportarCSV);
-    btnExportarPDF.addEventListener("click", exportarPDF);
   </script>
 </body>
 </html>
-
