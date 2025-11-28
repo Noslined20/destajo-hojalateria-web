@@ -36,7 +36,7 @@
       justify-content: center;
       padding: 20px;
       /* FONDO: Porsche negro en estudio oscuro */
-     background: url("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1920&auto=format&fit=crop");
+      background: url("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1920&auto=format&fit=crop");
       background-size: cover;
       background-position: center;
       background-color: #050505;
@@ -303,9 +303,11 @@
       color: #64748b;
     }
 
-    tbody tr:first-child { background-color: #fef2f2; }
-    tbody tr:first-child td { font-weight: 600; color: var(--primary); }
-    tbody tr:first-child .cell-detalle { font-weight: 400; color: #ef4444; }
+    /* Como los registros nuevos van abajo, ya no resaltamos el primero, 
+       sino el ultimo de la tabla con un borde sutil para indicar que fue el ultimo agregado */
+    tbody tr:last-child { background-color: #fef2f2; }
+    tbody tr:last-child td { font-weight: 600; color: var(--primary); }
+    tbody tr:last-child .cell-detalle { font-weight: 400; color: #ef4444; }
 
     .placa-tag { background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #e2e8f0; font-size: 0.8rem; font-weight: 700; color: #334155; }
     .btn-act { background: none; border: none; font-size: 1.2rem; padding: 5px; cursor: pointer; }
@@ -319,7 +321,8 @@
   <div id="loginWrapper" class="login-shell">
     <div class="login-card">
       
-    
+      <!-- ICONO SVG -->
+      <svg class="login-icon-svg" viewBox="0 0 100 100">
         <path d="M20 50 L30 35 L70 35 L80 50" stroke="white" stroke-width="3" fill="none"/>
         <path d="M20 50 L20 70 L80 70 L80 50" stroke="white" stroke-width="3" fill="none"/>
         <rect x="25" y="55" width="10" height="8" stroke="white" stroke-width="2" fill="none"/>
@@ -393,7 +396,8 @@
       </div>
 
       <div class="col-full">
-        <label>DETALLE DEL TRABAJO</label>
+        <!-- CAMBIO: ETIQUETA OBSERVACION -->
+        <label>OBSERVACIÓN</label>
         <textarea id="inputDetalle" rows="2" placeholder="Piezas a pintar, reparaciones..."></textarea>
       </div>
 
@@ -428,7 +432,9 @@
             <th>COLOR</th>
             <th>ORDEN</th>
             <th>PLACA</th>
-            <th>DETALLE</th> <th>FECHA</th>
+            <!-- CAMBIO: HEADER OBSERVACION -->
+            <th>OBSERVACIÓN</th> 
+            <th>FECHA</th>
             <th width="60"></th>
           </tr>
         </thead>
@@ -463,23 +469,48 @@
     let allDocs = [];
     let viewDocs = []; 
     let editId = null;
+    let textoPeriodo = ""; 
 
     const el = (id) => document.getElementById(id);
     
+    // Función auxiliar para convertir AAAA-MM-DD a DD-MM-AAAA
+    const formatLatino = (isoDate) => {
+      if(!isoDate) return "";
+      const [y, m, d] = isoDate.split("-");
+      return `${d}-${m}-${y}`;
+    };
+
     const getHoy = () => {
       const d = new Date();
       const off = d.getTimezoneOffset() * 60000;
       return new Date(d.getTime() - off).toISOString().slice(0,10);
     };
 
+    // Obtener fecha del VIERNES de inicio de semana
     const getViernesInicio = () => {
       const d = new Date();
       d.setHours(0,0,0,0);
       const day = d.getDay(); 
+      // Si hoy es viernes(5), sabado(6), restamos. Si es domingo(0)-jueves(4), restamos mas
       const sub = (day >= 5) ? (day - 5) : (day + 2);
       d.setDate(d.getDate() - sub);
       const off = d.getTimezoneOffset() * 60000;
       return new Date(d.getTime() - off).toISOString().slice(0,10);
+    };
+
+    // Obtener fecha del JUEVES final de semana (Viernes + 6 dias)
+    const getJuevesFinal = (fechaViernes) => {
+      // Creamos fecha asegurando zona horaria local simulada desde el string
+      const partes = fechaViernes.split("-"); // [YYYY, MM, DD]
+      // Mes en constructor Date es 0-indexado (Enero=0)
+      const d = new Date(partes[0], partes[1] - 1, partes[2]);
+      d.setDate(d.getDate() + 6); // Sumar 6 dias para llegar a Jueves
+      
+      // Formatear a YYYY-MM-DD manual para evitar desfases UTC
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     };
 
     function render(lista) {
@@ -487,7 +518,7 @@
       const tb = el("tbodyRegistros");
       tb.innerHTML = "";
       el("statTotal").textContent = lista.length;
-      el("statUltimo").textContent = lista.length ? lista[0].orden : "—";
+      el("statUltimo").textContent = lista.length ? lista[lista.length-1].orden : "—";
 
       if(!lista.length) {
         tb.innerHTML = `<tr><td colspan="8" style="padding:30px; color:#94a3b8; font-weight:600;">Sin registros</td></tr>`;
@@ -503,7 +534,8 @@
           <td style="font-weight:800; color:var(--primary);">${r.orden}</td>
           <td>${r.placa ? `<span class="placa-tag">${r.placa}</span>` : '—'}</td>
           <td class="cell-detalle" title="${r.detalle}">${r.detalle || '-'}</td>
-          <td style="font-size:0.8rem; font-weight:600;">${r.fecha.slice(5)}</td>
+          <!-- CAMBIO: Fecha formateada DD-MM-AAAA en la tabla tambien -->
+          <td style="font-size:0.8rem; font-weight:600;">${formatLatino(r.fecha)}</td>
           <td>
             <div style="display:flex; justify-content:center; gap:8px;">
               <button class="btn-act" onclick="window.edit('${r.id}')">✏️</button>
@@ -519,21 +551,35 @@
       const term = el("inputBuscar").value.trim();
       const desde = el("dateDesde").value;
       const hasta = el("dateHasta").value;
-      const inicioSemana = getViernesInicio();
+      
+      const inicioSemanaISO = getViernesInicio(); // YYYY-MM-DD del Viernes
+      const finSemanaISO = getJuevesFinal(inicioSemanaISO); // YYYY-MM-DD del Jueves
 
       let data = [...allDocs];
       let modo = "Semanal";
+      
+      // Texto por defecto con formato DD-MM-AAAA
+      textoPeriodo = `Periodo Semanal (Del ${formatLatino(inicioSemanaISO)} al ${formatLatino(finSemanaISO)})`; 
 
       if (term) {
         data = data.filter(r => String(r.orden).includes(term));
         modo = "Búsqueda";
+        textoPeriodo = `Reporte de Búsqueda: "${term}"`;
       } else if (desde || hasta) {
         if(desde) data = data.filter(r => r.fecha >= desde);
         if(hasta) data = data.filter(r => r.fecha <= hasta);
         modo = "Fechas";
+        
+        const dTxt = desde ? formatLatino(desde) : "...";
+        const hTxt = hasta ? formatLatino(hasta) : "Hoy";
+        textoPeriodo = `Periodo del ${dTxt} al ${hTxt}`;
       } else {
-        data = data.filter(r => r.fecha >= inicioSemana);
-        modo = "Viernes " + inicioSemana.slice(8);
+        // Modo Default (Semanal)
+        data = data.filter(r => r.fecha >= inicioSemanaISO);
+        // Podriamos filtrar tambien <= finSemanaISO si quisieras ser estricto con el jueves,
+        // pero usualmente se quiere ver todo lo de esta semana en adelante.
+        modo = "Viernes " + formatLatino(inicioSemanaISO).slice(0,5); // Muestra dd-mm
+        // El textoPeriodo ya se configuró arriba correctamente
       }
 
       el("statSemana").textContent = modo;
@@ -572,7 +618,6 @@
       editId = null;
       el("btnGuardar").textContent = "💾 GUARDAR";
       el("btnGuardar").style.background = "var(--primary)";
-      window.scrollTo(0,0);
     }
     
     window.edit = (id) => {
@@ -605,9 +650,9 @@
     // CSV
     el("btnCSV").onclick = () => {
       if(!viewDocs.length) return alert("Sin datos");
-      const headers = ["AUTO","COLOR","ORDEN","PLACA","DETALLE","FECHA"];
+      const headers = ["AUTO","COLOR","ORDEN","PLACA","OBSERVACION","FECHA"];
       const rows = viewDocs.map(r => [
-        r.auto, r.color, r.orden, r.placa, (r.detalle||"").replace(/\n/g," "), r.fecha
+        r.auto, r.color, r.orden, r.placa, (r.detalle||"").replace(/\n/g," "), formatLatino(r.fecha)
       ]);
       let csv = headers.join(",") + "\n" + rows.map(r => r.map(c => `"${c || ''}"`).join(",")).join("\n");
       const link = document.createElement("a");
@@ -625,18 +670,21 @@
        doc.setFontSize(16);
        doc.text("Pintura", 105, 20, null, null, "center");
        
-       const fechas = viewDocs.map(r => r.fecha).sort();
-       const rango = fechas.length > 1 
-         ? `Del ${fechas[0]} al ${fechas[fechas.length-1]}` 
-         : `Fecha: ${fechas[0] || getHoy()}`;
-       
+       // Muestra el rango de fechas con formato DD-MM-AAAA
        doc.setFontSize(10);
-       doc.text(rango, 105, 28, null, null, "center");
+       doc.text(textoPeriodo, 105, 28, null, null, "center");
 
-       const body = viewDocs.map(r => [r.auto, r.color, r.orden, r.placa, r.detalle, r.fecha]);
+       const body = viewDocs.map(r => [
+         r.auto, 
+         r.color, 
+         r.orden, 
+         r.placa, 
+         r.detalle, 
+         formatLatino(r.fecha) // Fecha formateada en la tabla del PDF tambien
+       ]);
        
        doc.autoTable({ 
-         head:[["AUTO","COLOR","ORDEN","PLACA","DETALLE","FECHA"]], 
+         head:[["AUTO","COLOR","ORDEN","PLACA","OBSERVACION","FECHA"]], 
          body: body, 
          startY: 35,
          headStyles: { fillColor: [239, 68, 68] },
@@ -655,7 +703,9 @@
       if(user) {
         el("loginWrapper").style.display = "none";
         el("appWrapper").style.display = "block";
-        onSnapshot(query(colRef, orderBy("createdAt", "desc")), (snap) => {
+        
+        // Orden ASCENDENTE para que nuevos salgan al final
+        onSnapshot(query(colRef, orderBy("createdAt", "asc")), (snap) => {
           allDocs = snap.docs.map(d => {
              let f = d.data().fecha;
              if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
