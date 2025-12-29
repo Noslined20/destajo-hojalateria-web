@@ -2,326 +2,152 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Control Pintura</title>
+  <title>Pintura</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
     /* ===== ESTILOS BASE ===== */
     :root {
       --primary: #ef4444; /* Rojo intenso */
+      --dark: #0f172a;
       --bg-body: #f8fafc;
       --text-main: #0f172a;
+      --success: #16a34a;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; padding: 0; min-height: 100vh; background: var(--bg-body); color: var(--text-main); font-size: 16px; padding-bottom: 80px; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      min-height: 100vh;
-      background: var(--bg-body);
-      color: var(--text-main);
-      font-size: 16px;
-    }
-
-    /* ===== LOGIN ESTILO DARK LUXURY (PORSCHE) ===== */
+    /* =========================================
+       LOGIN ESTILO DARK LUXURY (TU CÓDIGO)
+       ========================================= */
     .login-shell {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      /* FONDO: Porsche negro en estudio oscuro */
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
       background: url("https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=1920&auto=format&fit=crop");
-      background-size: cover;
-      background-position: center;
-      background-color: #050505;
+      background-size: cover; background-position: center; background-color: #050505;
     }
-
-    /* Capa oscura sutil sobre la imagen para resaltar el login */
-    .login-shell::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4); 
-      pointer-events: none;
-    }
-
-    .login-card {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 380px;
-      /* Fondo azul muy oscuro / casi negro como la imagen */
-      background: #111827; 
-      border: 1px solid #1f2937;
-      border-radius: 16px;
-      padding: 40px 30px;
-      text-align: center;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-    }
-
-    /* ICONO SVG PERSONALIZADO (Auto + Pistola) */
-    .login-icon-svg {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 15px;
-      stroke: #ffffff;
-      stroke-width: 1.5;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    .login-title {
-      color: #ffffff;
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin: 0 0 35px 0;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .input-wrapper {
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .input-wrapper label {
-      color: #9ca3af; /* Gris azulado */
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-left: 2px;
-      margin-bottom: 8px;
-      display: block;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .login-input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 8px;
-      border: 1px solid #374151; /* Borde sutil */
-      background: #1f2937; /* Fondo input oscuro */
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: 0.2s;
-    }
+    .login-shell::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); pointer-events: none; }
     
-    .login-input:focus {
-      border-color: #ef4444; /* Rojo al seleccionar */
-      background: #374151;
+    .login-card {
+      position: relative; z-index: 10; width: 100%; max-width: 380px;
+      background: #111827; border: 1px solid #1f2937; border-radius: 16px;
+      padding: 40px 30px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
     }
-
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      background: #ef4444; /* Rojo deportivo */
-      color: white;
-      font-size: 0.9rem;
-      font-weight: 700;
-      margin-top: 15px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
-      transition: background 0.2s;
-    }
+    .login-icon-svg { width: 80px; height: 80px; margin-bottom: 15px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .login-title { color: #ffffff; font-size: 1.5rem; font-weight: 700; margin: 0 0 35px 0; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .input-wrapper { margin-bottom: 20px; text-align: left; }
+    .input-wrapper label { color: #9ca3af; font-size: 0.7rem; font-weight: 700; margin-left: 2px; margin-bottom: 8px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .login-input { width: 100%; padding: 14px 16px; border-radius: 8px; border: 1px solid #374151; background: #1f2937; color: #fff; font-size: 0.95rem; outline: none; transition: 0.2s; }
+    .login-input:focus { border-color: #ef4444; background: #374151; }
+    
+    .btn-login { width: 100%; padding: 14px; border-radius: 8px; border: none; background: #ef4444; color: white; font-size: 0.9rem; font-weight: 700; margin-top: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); transition: background 0.2s; }
     .btn-login:hover { background: #dc2626; }
+    #loginError { color: #fca5a5; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
 
-    /* ===== APP (ESTILOS ORIGINALES) ===== */
-    .app-shell {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 15px;
-      display: none; 
-      padding-bottom: 80px; 
-    }
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      position: relative;
-      padding: 10px 0;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .app-logo { 
-      position: absolute; 
-      left: 50%; 
-      transform: translateX(-50%);
-      font-size: 1.4rem; 
-      font-weight: 800; 
-      color: #1e293b; 
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-    .btn-logout { 
-      background: white; 
-      border: 1px solid #cbd5e1; 
-      padding: 8px 12px; 
-      border-radius: 6px; 
-      font-size: 0.7rem; 
-      font-weight: 700; 
-      color: #64748b;
-      margin-left: auto;
-      text-transform: uppercase;
-    }
+    /* =========================================
+       APP PRINCIPAL (ESTILO NUEVO + FIXES)
+       ========================================= */
+    .app-shell { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
 
-    /* STATS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .stat-box {
-      background: white;
-      padding: 15px 5px;
-      border-radius: 12px;
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; padding: 10px 0; border-bottom: 1px solid #e2e8f0; }
+    .app-logo { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.4rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 2px; }
+    .btn-logout { background: white; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-left: auto; text-transform: uppercase; cursor: pointer; }
+
+    /* DASHBOARD FINANCIERO */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-card { background: white; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .stat-label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 5px; }
+    .stat-val { font-size: 1.4rem; font-weight: 800; color: var(--dark); }
+    
+    .stat-card.dark { background: #1e293b; color: white; border: none; }
+    .stat-card.dark .stat-label { color: #94a3b8; }
+    .stat-card.dark .stat-val { color: #fff; }
+
+    /* --- FIX DEL INPUT MATERIAL --- */
+    /* Esto arregla que se ponga blanco al escribir */
+    .input-ghost {
+      background: transparent;
+      border: none;
+      border-bottom: 2px dashed #94a3b8;
+      width: 90px;
+      font-weight: 800;
+      font-size: 1.3rem;
       text-align: center;
-      border: 1px solid #e2e8f0;
+      color: #ffffff !important; /* FORZAR COLOR BLANCO */
+      outline: none;
     }
-    .stat-num { font-size: 1.5rem; font-weight: 800; color: #0f172a; line-height: 1; }
-    .stat-txt { font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-top:5px; }
+    .input-ghost::placeholder { color: rgba(255,255,255,0.3); }
+    .input-ghost:focus { border-bottom-color: var(--primary); }
 
     /* FORMULARIO */
-    .main-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-      border: 1px solid #e2e8f0;
-    }
-
+    .main-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #e2e8f0; }
     .form-row { display: flex; gap: 12px; margin-bottom: 15px; }
     .col-half { flex: 1; }
     .col-full { width: 100%; margin-bottom: 15px; }
+    @media (max-width: 500px) { .form-row { flex-direction: column; gap: 10px; } }
 
-    label {
-      display: block;
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: #64748b;
-      margin-bottom: 6px;
-      margin-left: 4px;
-      text-transform: uppercase;
+    label { display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 6px; margin-left: 4px; text-transform: uppercase; }
+    
+    input.app-input, textarea, select { 
+      width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 16px; background: #f8fafc; outline: none; appearance: none; color: #1e293b; font-weight: 500; 
     }
+    input.app-input:focus, textarea:focus, select:focus { border-color: var(--primary); background: #fff; }
 
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      font-size: 16px; 
-      background: #f8fafc;
-      outline: none;
-      appearance: none;
-      color: #1e293b;
-      font-weight: 500;
-    }
-    input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+    /* CONCEPTOS */
+    .concept-item { display: grid; grid-template-columns: 2fr 1fr 1fr 30px; gap: 5px; margin-bottom: 8px; align-items: center; background: #f1f5f9; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
+    @media (max-width: 500px) { .concept-item { grid-template-columns: 1fr 1fr; row-gap: 8px; } .concept-item select { grid-column: span 2; } }
+    
+    .btn-add { width: 100%; padding: 10px; border: 2px dashed #cbd5e1; background: white; color: #64748b; font-weight: 700; border-radius: 8px; margin-bottom: 15px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+    .btn-x { background: #fee2e2; color: #ef4444; border: none; height: 30px; width: 30px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-    .btn-save {
-      width: 100%;
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 14px;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-weight: 800;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      text-transform: uppercase;
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-    }
+    .btn-save { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 800; display: flex; justify-content: center; gap: 8px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); cursor: pointer; }
 
     /* HERRAMIENTAS */
-    .tools-section {
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #e2e8f0;
-    }
+    .tools-section { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+    .btn-group { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-tool { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+
+    /* ===== LISTA MÓVIL (TARJETAS) ===== */
+    .mobile-list { display: flex; flex-direction: column; gap: 15px; }
+    .m-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
     
-    .search-row { margin-bottom: 12px; }
-    .date-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
-    .date-input { flex: 1; padding: 10px; font-size: 0.85rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px;}
-
-    .export-row { display: flex; gap: 8px; }
-    .btn-tool {
-      flex: 1;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      background: #f8fafc;
-      color: #475569;
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    /* TABLA */
-    .table-wrapper {
-      background: white;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #e2e8f0;
-      overflow-x: auto;
-    }
-    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    .m-header { padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; background: white; }
+    .m-info h3 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--dark); }
+    .m-info p { margin: 2px 0 0; font-size: 0.8rem; color: #64748b; }
+    .m-badge { display: inline-block; background: #eff6ff; color: #3b82f6; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; border: 1px solid #dbeafe; margin-top: 4px;}
     
-    th, td {
-      text-align: center;
-      vertical-align: middle;
-      padding: 14px 10px;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.85rem;
+    .m-money { text-align: right; }
+    .m-total { font-size: 1.1rem; font-weight: 800; color: var(--success); display: block; }
+    .m-arrow { font-size: 0.8rem; color: #cbd5e1; margin-top: 5px; display: block;}
+
+    .m-body { display: none; padding: 15px; background: #f8fafc; border-top: 1px solid #f1f5f9; }
+    .m-body.open { display: block; }
+    .m-detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; color: #475569; border-bottom: 1px dashed #e2e8f0; padding-bottom: 5px; }
+    .m-actions { display: flex; gap: 10px; margin-top: 15px; }
+    .btn-act { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+
+    /* TABLA ESCRITORIO */
+    .desktop-table-container { display: none; width: 100%; overflow-x: auto; background: white; border-radius: 12px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    th { text-align: left; padding: 15px; background: #f8fafc; color: #64748b; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; }
+    td { padding: 12px 15px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; vertical-align: top; }
+
+    @media (min-width: 769px) {
+      .desktop-table-container { display: block; }
+      .mobile-list { display: none; }
     }
-    thead { background: #f1f5f9; }
-    th { color: #64748b; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight:800; }
-    
-    .cell-detalle {
-      max-width: 150px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-style: italic;
-      color: #64748b;
-    }
-
-    /* Como los registros nuevos van abajo, ya no resaltamos el primero, 
-       sino el ultimo de la tabla con un borde sutil para indicar que fue el ultimo agregado */
-    tbody tr:last-child { background-color: #fef2f2; }
-    tbody tr:last-child td { font-weight: 600; color: var(--primary); }
-    tbody tr:last-child .cell-detalle { font-weight: 400; color: #ef4444; }
-
-    .placa-tag { background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-family: monospace; border: 1px solid #e2e8f0; font-size: 0.8rem; font-weight: 700; color: #334155; }
-    .btn-act { background: none; border: none; font-size: 1.2rem; padding: 5px; cursor: pointer; }
-    
-    #loginError { color: #fca5a5; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
-
   </style>
 </head>
 <body>
 
   <div id="loginWrapper" class="login-shell">
     <div class="login-card">
-      
-      <!-- ICONO SVG -->
       <svg class="login-icon-svg" viewBox="0 0 100 100">
         <path d="M20 50 L30 35 L70 35 L80 50" stroke="white" stroke-width="3" fill="none"/>
         <path d="M20 50 L20 70 L80 70 L80 50" stroke="white" stroke-width="3" fill="none"/>
@@ -330,21 +156,11 @@
         <line x1="40" y1="55" x2="60" y2="55" stroke="white" stroke-width="2"/>
         <line x1="40" y1="60" x2="60" y2="60" stroke="white" stroke-width="2"/>
         <line x1="40" y1="65" x2="60" y2="65" stroke="white" stroke-width="2"/>
-        
-        <path d="M75 25 L75 15 L95 15 L95 25 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M85 25 L85 40" stroke="white" stroke-width="3"/> <path d="M70 40 L100 40 L100 50 L90 50 L90 70 L80 70 L80 50 L70 50 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M70 40 L60 30" stroke="white" stroke-width="2"/> <path d="M65 45 L55 45" stroke="white" stroke-width="2"/> </svg>
-
+        <path d="M75 25 L75 15 L95 15 L95 25 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M85 25 L85 40" stroke="white" stroke-width="3"/> <path d="M70 40 L100 40 L100 50 L90 50 L90 70 L80 70 L80 50 L70 50 Z" stroke="white" stroke-width="3" fill="none"/> <path d="M70 40 L60 30" stroke="white" stroke-width="2"/> <path d="M65 45 L55 45" stroke="white" stroke-width="2"/> 
+      </svg>
       <h1 class="login-title">PINTURA</h1>
-      
-      <div class="input-wrapper">
-        <label>Correo</label>
-        <input type="email" id="loginEmail" class="login-input" />
-      </div>
-      
-      <div class="input-wrapper">
-        <label>Contraseña</label>
-        <input type="password" id="loginPassword" class="login-input" />
-      </div>
-
+      <div class="input-wrapper"><label>Correo</label><input type="email" id="loginEmail" class="login-input" /></div>
+      <div class="input-wrapper"><label>Contraseña</label><input type="password" id="loginPassword" class="login-input" /></div>
       <button id="btnLogin" class="btn-login">ENTRAR</button>
       <div id="loginError"></div>
     </div>
@@ -354,88 +170,78 @@
     
     <div class="top-bar">
       <div class="app-logo">PINTURA</div>
-      <button id="btnLogout" class="btn-logout">Salir</button>
+      <button id="btnLogout" class="btn-logout">SALIR</button>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="stat-num" id="statTotal">0</div>
-        <div class="stat-txt">Total</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Ganado</span>
+        <div class="stat-val" style="color:var(--primary)" id="dispComisiones">$0</div>
       </div>
-      <div class="stat-box">
-        <div class="stat-num" id="statUltimo">—</div>
-        <div class="stat-txt">Último</div>
+      <div class="stat-card dark" id="cardNeta">
+        <span class="stat-label">Ganancia Neta</span>
+        <div class="stat-val" id="dispNeta">$0</div>
       </div>
-      <div class="stat-box" style="background:#fff1f2; border-color:#fecaca;">
-        <div class="stat-num" id="statSemana" style="color:var(--primary); font-size:0.7rem; line-height:2; font-weight:700;">...</div>
-        <div class="stat-txt" style="color:var(--primary);">Vista</div>
+      <div class="stat-card dark" style="background:#334155;">
+        <span class="stat-label">Material Semanal</span>
+        <div>
+          $ <input type="number" id="inputMaterial" class="input-ghost" placeholder="0">
+          <span id="btnSaveMat" style="cursor:pointer; font-size:1.2rem;" title="Guardar">💾</span>
+        </div>
       </div>
     </div>
 
     <div class="main-card">
       <div class="form-row">
-        <div class="col-half">
-          <label>AUTO *</label>
-          <input type="text" id="inputAuto" placeholder="Ej. MUSTANG" />
-        </div>
-        <div class="col-half">
-          <label>COLOR *</label>
-          <input type="text" id="inputColor" placeholder="Ej. PLATA" />
-        </div>
+        <div class="col-half"><label>AUTO *</label><input type="text" id="inputAuto" class="app-input" placeholder="Ej. MUSTANG" /></div>
+        <div class="col-half"><label>COLOR *</label><input type="text" id="inputColor" class="app-input" placeholder="Ej. PLATA" /></div>
       </div>
 
       <div class="form-row">
-        <div class="col-half">
-          <label>ORDEN *</label>
-          <input type="tel" id="inputOrden" placeholder="12345" />
-        </div>
-        <div class="col-half">
-          <label>PLACA</label>
-          <input type="text" id="inputPlaca" placeholder="ABC-123" autocapitalize="characters" />
-        </div>
+        <div class="col-half"><label>ORDEN *</label><input type="tel" id="inputOrden" class="app-input" placeholder="12345" /></div>
+        <div class="col-half"><label>PLACA</label><input type="text" id="inputPlaca" class="app-input" placeholder="ABC-123" autocapitalize="characters" /></div>
       </div>
 
+      <label>Conceptos de Cobro</label>
+      <div id="containerConceptos"></div>
+      <button id="btnAgregarConcepto" class="btn-add">+ Agregar Concepto</button>
+
       <div class="col-full">
-        <!-- CAMBIO: ETIQUETA OBSERVACION -->
         <label>OBSERVACIÓN</label>
-        <textarea id="inputDetalle" rows="2" placeholder="Piezas a pintar, reparaciones..."></textarea>
+        <textarea id="inputObservacion" rows="2" placeholder="Notas..."></textarea>
       </div>
 
       <button id="btnGuardar" class="btn-save">💾 GUARDAR</button>
-      <button id="btnLimpiar" style="width:100%; padding:12px; margin-top:10px; background:none; border:none; color:#94a3b8; font-size:0.75rem; font-weight:700; text-transform:uppercase;">Limpiar Campos</button>
+      <button id="btnLimpiar" style="width:100%; padding:12px; margin-top:10px; background:none; border:none; color:#94a3b8; font-size:0.75rem; font-weight:700; text-transform:uppercase; cursor:pointer;">Limpiar Campos</button>
     </div>
 
     <div class="tools-section">
-      <div class="search-row">
-        <input type="number" id="inputBuscar" placeholder="🔍 Buscar orden histórica..." style="background:#f8fafc; font-weight:600;" />
+      <input type="text" id="inputBuscar" class="app-input" placeholder="🔍 Buscar orden..." style="font-weight:600; margin-bottom:10px;" />
+      
+      <div class="form-row">
+        <div class="col-half"><input type="date" id="dateDesde" class="app-input" /></div>
+        <div class="col-half"><input type="date" id="dateHasta" class="app-input" /></div>
       </div>
 
-      <div class="date-row">
-        <input type="date" id="dateDesde" class="date-input" />
-        <span style="color:#64748b; font-size:0.7rem; font-weight:800;">AL</span>
-        <input type="date" id="dateHasta" class="date-input" />
-      </div>
-
-      <div class="export-row">
+      <div class="btn-group">
         <button id="btnLimpiarFiltros" class="btn-tool">❌ Filtro</button>
         <button id="btnCSV" class="btn-tool">📊 CSV</button>
         <button id="btnPDF" class="btn-tool">📄 PDF</button>
       </div>
+      <div id="textoPeriodo" style="text-align:center; font-size:0.75rem; color:#94a3b8; margin-top:10px;">...</div>
     </div>
 
-    <div class="table-wrapper">
-      <table>
+    <div class="mobile-list" id="mobileContainer"></div>
+
+    <div class="desktop-table-container">
+      <table id="tablaRegistros">
         <thead>
           <tr>
-            <th width="30">#</th>
-            <th>AUTO</th>
-            <th>COLOR</th>
-            <th>ORDEN</th>
-            <th>PLACA</th>
-            <!-- CAMBIO: HEADER OBSERVACION -->
-            <th>OBSERVACIÓN</th> 
-            <th>FECHA</th>
-            <th width="60"></th>
+            <th>Auto / Color</th>
+            <th>Orden</th>
+            <th>Finanzas</th>
+            <th>Fecha</th>
+            <th style="text-align:right">Acciones</th>
           </tr>
         </thead>
         <tbody id="tbodyRegistros"></tbody>
@@ -449,7 +255,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -465,258 +271,285 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     const colRef = collection(db, "registros");
+    const docConfig = doc(db, "configuracion", "gastos_semanales");
 
+    // ESTADO
     let allDocs = [];
-    let viewDocs = []; 
+    let viewDocs = [];
     let editId = null;
-    let textoPeriodo = ""; 
+    let materialCost = 0;
+    let conceptosForm = [];
 
     const el = (id) => document.getElementById(id);
-    
-    // Función auxiliar para convertir AAAA-MM-DD a DD-MM-AAAA
-    const formatLatino = (isoDate) => {
-      if(!isoDate) return "";
-      const [y, m, d] = isoDate.split("-");
-      return `${d}-${m}-${y}`;
+    const formatMoney = (n) => "$" + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    const formatLatino = (iso) => { 
+        if(!iso) return ""; 
+        const parts = iso.split("-"); 
+        if(parts.length < 3) return iso;
+        return `${parts[2]}/${parts[1]}/${parts[0]}`; 
     };
 
-    const getHoy = () => {
-      const d = new Date();
-      const off = d.getTimezoneOffset() * 60000;
-      return new Date(d.getTime() - off).toISOString().slice(0,10);
-    };
-
-    // Obtener fecha del VIERNES de inicio de semana
-    const getViernesInicio = () => {
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      const day = d.getDay(); 
-      // Si hoy es viernes(5), sabado(6), restamos. Si es domingo(0)-jueves(4), restamos mas
-      const sub = (day >= 5) ? (day - 5) : (day + 2);
-      d.setDate(d.getDate() - sub);
-      const off = d.getTimezoneOffset() * 60000;
-      return new Date(d.getTime() - off).toISOString().slice(0,10);
-    };
-
-    // Obtener fecha del JUEVES final de semana (Viernes + 6 dias)
-    const getJuevesFinal = (fechaViernes) => {
-      // Creamos fecha asegurando zona horaria local simulada desde el string
-      const partes = fechaViernes.split("-"); // [YYYY, MM, DD]
-      // Mes en constructor Date es 0-indexado (Enero=0)
-      const d = new Date(partes[0], partes[1] - 1, partes[2]);
-      d.setDate(d.getDate() + 6); // Sumar 6 dias para llegar a Jueves
-      
-      // Formatear a YYYY-MM-DD manual para evitar desfases UTC
-      const year = d.getFullYear();
-      const month = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    };
-
+    // RENDERIZADO DUAL
     function render(lista) {
-      viewDocs = lista; 
+      viewDocs = lista;
       const tb = el("tbodyRegistros");
+      const mob = el("mobileContainer");
       tb.innerHTML = "";
-      el("statTotal").textContent = lista.length;
-      el("statUltimo").textContent = lista.length ? lista[lista.length-1].orden : "—";
+      mob.innerHTML = "";
+
+      let totalComisiones = 0;
 
       if(!lista.length) {
-        tb.innerHTML = `<tr><td colspan="8" style="padding:30px; color:#94a3b8; font-weight:600;">Sin registros</td></tr>`;
+        mob.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8;">No hay registros</div>`;
         return;
       }
 
-      lista.forEach((r, i) => {
+      lista.forEach(r => {
+        let totalOrden = 0;
+        let htmlDesglose = "";
+        let arrayDesglose = [];
+
+        if(r.conceptos && r.conceptos.length > 0) {
+          r.conceptos.forEach(c => {
+            const m = parseFloat(c.monto)||0;
+            const p = parseFloat(c.porcentaje)||0;
+            const g = m * (p/100);
+            totalOrden += g;
+            htmlDesglose += `<div style="font-size:0.8rem; color:#64748b">${c.nombre}: <b>$${g.toFixed(0)}</b></div>`;
+            arrayDesglose.push({nombre: c.nombre, val: g});
+          });
+        } else {
+          htmlDesglose = "<span style='color:#cbd5e1; font-size:0.8rem;'>--</span>";
+        }
+        totalComisiones += totalOrden;
+
+        const obs = r.observacion || r.detalle || "";
+
+        // 1. ESCRITORIO
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td style="color:#94a3b8;">${i+1}</td>
-          <td style="font-weight:700;">${r.auto}</td>
-          <td>${r.color}</td>
-          <td style="font-weight:800; color:var(--primary);">${r.orden}</td>
-          <td>${r.placa ? `<span class="placa-tag">${r.placa}</span>` : '—'}</td>
-          <td class="cell-detalle" title="${r.detalle}">${r.detalle || '-'}</td>
-          <!-- CAMBIO: Fecha formateada DD-MM-AAAA en la tabla tambien -->
-          <td style="font-size:0.8rem; font-weight:600;">${formatLatino(r.fecha)}</td>
-          <td>
-            <div style="display:flex; justify-content:center; gap:8px;">
-              <button class="btn-act" onclick="window.edit('${r.id}')">✏️</button>
-              <button class="btn-act" onclick="window.del('${r.id}')" style="color:var(--primary);">🗑️</button>
-            </div>
+          <td><b>${r.auto}</b><br><span style="font-size:0.8rem; color:#64748b">${r.color}</span></td>
+          <td><span style="background:#eff6ff; color:#3b82f6; padding:3px 6px; border-radius:4px; font-weight:bold; font-size:0.8rem;">${r.orden}</span></td>
+          <td>${htmlDesglose}<div style="border-top:1px solid #e2e8f0; font-weight:bold; color:var(--success); margin-top:2px;">Total: $${totalOrden.toFixed(0)}</div></td>
+          <td style="font-size:0.85rem;">${formatLatino(r.fecha)}</td>
+          <td style="text-align:right;">
+             <button onclick="window.edit('${r.id}')" style="cursor:pointer; border:none; background:none; font-size:1.2rem;">✏️</button>
+             <button onclick="window.del('${r.id}')" style="cursor:pointer; border:none; background:none; color:#ef4444; font-size:1.2rem;">🗑️</button>
           </td>
         `;
         tb.appendChild(tr);
+
+        // 2. MÓVIL
+        let htmlDetalleMovil = "";
+        if(arrayDesglose.length > 0) {
+            arrayDesglose.forEach(item => {
+                htmlDetalleMovil += `
+                <div class="m-detail-row">
+                    <span>${item.nombre}</span>
+                    <b>$${item.val.toFixed(0)}</b>
+                </div>`;
+            });
+        } else { htmlDetalleMovil = "<span style='color:#cbd5e1'>Sin conceptos</span>"; }
+
+        const card = document.createElement("div");
+        card.className = "m-card";
+        card.innerHTML = `
+          <div class="m-header" onclick="this.nextElementSibling.classList.toggle('open')">
+            <div class="m-info">
+              <h3>${r.auto}</h3>
+              <p>${r.color} • ${formatLatino(r.fecha)}</p>
+              <span class="m-badge">#${r.orden}</span>
+            </div>
+            <div class="m-money">
+              <span class="m-total">$${totalOrden.toFixed(0)}</span>
+              <span class="m-arrow">▼ Ver</span>
+            </div>
+          </div>
+          <div class="m-body">
+            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
+               ${htmlDetalleMovil}
+            </div>
+            ${obs ? `<div style="font-style:italic; font-size:0.8rem; color:#64748b; background:#fff; padding:8px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:10px;">📝 ${obs}</div>` : ''}
+            <div class="m-actions">
+              <button class="btn-act" style="background:#e0f2fe; color:#0369a1" onclick="window.edit('${r.id}')">Editar</button>
+              <button class="btn-act" style="background:#fee2e2; color:#b91c1c" onclick="window.del('${r.id}')">Borrar</button>
+            </div>
+          </div>
+        `;
+        mob.appendChild(card);
+      });
+
+      // Actualizar Dashboard
+      if(el("dispComisiones")) el("dispComisiones").textContent = formatMoney(totalComisiones);
+      const neta = totalComisiones - materialCost;
+      if(el("dispNeta")) el("dispNeta").textContent = formatMoney(neta);
+      if(el("cardNeta")) el("cardNeta").style.background = neta < 0 ? "#7f1d1d" : "#0f172a";
+    }
+
+    // CONCEPTOS FORM
+    function renderConceptInputs() {
+      const c = el("containerConceptos"); c.innerHTML = "";
+      conceptosForm.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.className = "concept-item";
+        div.innerHTML = `
+          <select class="app-input" style="margin:0" onchange="window.updCon(${i},'nombre',this.value)">
+            <option value="Aseguradora" ${item.nombre==='Aseguradora'?'selected':''}>Aseguradora</option>
+            <option value="Rin" ${item.nombre==='Rin'?'selected':''}>Rin</option>
+            <option value="Particular" ${item.nombre==='Particular'?'selected':''}>Particular</option>
+            <option value="Otro" ${item.nombre==='Otro'?'selected':''}>Otro</option>
+          </select>
+          <input type="number" class="app-input" style="margin:0" placeholder="$" value="${item.monto}" oninput="window.updCon(${i},'monto',this.value)">
+          <input type="number" class="app-input" style="margin:0" placeholder="%" value="${item.porcentaje}" oninput="window.updCon(${i},'porcentaje',this.value)">
+          ${i>0 ? `<button class="btn-x" onclick="window.delCon(${i})">×</button>` : '<span></span>'}
+        `;
+        c.appendChild(div);
       });
     }
 
+    window.updCon = (i,k,v) => { conceptosForm[i][k] = v; };
+    window.delCon = (i) => { conceptosForm.splice(i,1); renderConceptInputs(); };
+    el("btnAgregarConcepto").onclick = () => { conceptosForm.push({nombre:"Aseguradora",monto:"",porcentaje:""}); renderConceptInputs(); };
+
+    // FILTROS
     function filtrar() {
-      const term = el("inputBuscar").value.trim();
-      const desde = el("dateDesde").value;
-      const hasta = el("dateHasta").value;
+      const q = el("inputBuscar").value.trim().toUpperCase();
+      const d1 = el("dateDesde").value;
+      const d2 = el("dateHasta").value;
       
-      const inicioSemanaISO = getViernesInicio(); // YYYY-MM-DD del Viernes
-      const finSemanaISO = getJuevesFinal(inicioSemanaISO); // YYYY-MM-DD del Jueves
+      let lista = [...allDocs];
+      let txt = "Mostrando todo";
 
-      let data = [...allDocs];
-      let modo = "Semanal";
-      
-      // Texto por defecto con formato DD-MM-AAAA
-      textoPeriodo = `Periodo Semanal (Del ${formatLatino(inicioSemanaISO)} al ${formatLatino(finSemanaISO)})`; 
+      const getViernes = () => {
+         const d = new Date(); d.setHours(0,0,0,0);
+         const day = d.getDay();
+         const sub = (day >= 5) ? (day - 5) : (day + 2);
+         d.setDate(d.getDate() - sub);
+         const off = d.getTimezoneOffset()*60000;
+         return new Date(d.getTime()-off).toISOString().slice(0,10);
+      };
 
-      if (term) {
-        data = data.filter(r => String(r.orden).includes(term));
-        modo = "Búsqueda";
-        textoPeriodo = `Reporte de Búsqueda: "${term}"`;
-      } else if (desde || hasta) {
-        if(desde) data = data.filter(r => r.fecha >= desde);
-        if(hasta) data = data.filter(r => r.fecha <= hasta);
-        modo = "Fechas";
-        
-        const dTxt = desde ? formatLatino(desde) : "...";
-        const hTxt = hasta ? formatLatino(hasta) : "Hoy";
-        textoPeriodo = `Periodo del ${dTxt} al ${hTxt}`;
+      if(q) {
+         lista = lista.filter(r => String(r.orden).includes(q) || r.auto.includes(q));
+         txt = `Busqueda: ${q}`;
+      } else if (d1 || d2) {
+         if(d1) lista = lista.filter(r => r.fecha >= d1);
+         if(d2) lista = lista.filter(r => r.fecha <= d2);
+         txt = `Del ${formatLatino(d1)} al ${formatLatino(d2)}`;
       } else {
-        // Modo Default (Semanal)
-        data = data.filter(r => r.fecha >= inicioSemanaISO);
-        // Podriamos filtrar tambien <= finSemanaISO si quisieras ser estricto con el jueves,
-        // pero usualmente se quiere ver todo lo de esta semana en adelante.
-        modo = "Viernes " + formatLatino(inicioSemanaISO).slice(0,5); // Muestra dd-mm
-        // El textoPeriodo ya se configuró arriba correctamente
+         const vier = getViernes();
+         lista = lista.filter(r => r.fecha >= vier);
+         txt = `Semana actual (Desde ${formatLatino(vier)})`;
       }
-
-      el("statSemana").textContent = modo;
-      render(data);
+      
+      if(el("textoPeriodo")) el("textoPeriodo").innerText = txt;
+      render(lista);
     }
 
+    // OPERACIONES
     el("btnGuardar").onclick = async () => {
       const auto = el("inputAuto").value.trim().toUpperCase();
-      const color = el("inputColor").value.trim().toUpperCase();
       const orden = el("inputOrden").value.trim();
-      
       if(!auto || !orden) return alert("Falta Auto u Orden");
 
-      const datos = {
-        auto, color, orden,
-        placa: el("inputPlaca").value.trim().toUpperCase(),
-        detalle: el("inputDetalle").value.trim(),
-        fecha: getHoy()
+      const conceptos = conceptosForm.filter(c => c.monto && c.porcentaje);
+      const data = {
+        auto, color: el("inputColor").value.toUpperCase(), orden,
+        placa: el("inputPlaca").value.toUpperCase(),
+        observacion: el("inputObservacion").value,
+        conceptos,
+        fecha: new Date().toISOString().slice(0,10)
       };
 
       try {
-        if(editId) {
-          await updateDoc(doc(db, "registros", editId), datos);
-          alert("Registro actualizado");
-        } else {
-          await addDoc(colRef, { ...datos, createdAt: serverTimestamp() });
-        }
+        if(editId) await updateDoc(doc(db, "registros", editId), data);
+        else await addDoc(colRef, { ...data, createdAt: serverTimestamp() });
         limpiar();
       } catch(e) { alert(e.message); }
     };
 
-    function limpiar() {
-      el("inputAuto").value=""; el("inputColor").value="";
-      el("inputOrden").value=""; el("inputPlaca").value="";
-      el("inputDetalle").value="";
-      editId = null;
-      el("btnGuardar").textContent = "💾 GUARDAR";
-      el("btnGuardar").style.background = "var(--primary)";
+    if(el("btnSaveMat")){
+        el("btnSaveMat").onclick = async () => {
+           const v = parseFloat(el("inputMaterial").value)||0;
+           await setDoc(docConfig, { totalMaterial: v }, { merge: true });
+           alert("Costo Material Guardado");
+        };
     }
-    
+
+    function limpiar() {
+      el("inputAuto").value=""; el("inputColor").value=""; el("inputOrden").value=""; el("inputPlaca").value=""; el("inputObservacion").value="";
+      editId = null; el("btnGuardar").textContent = "💾 GUARDAR"; el("btnGuardar").style.background = "var(--primary)";
+      conceptosForm = [{nombre:"Aseguradora",monto:"",porcentaje:""}]; renderConceptInputs();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
     window.edit = (id) => {
       const r = allDocs.find(x => x.id === id);
-      el("inputAuto").value=r.auto; el("inputColor").value=r.color;
-      el("inputOrden").value=r.orden; el("inputPlaca").value=r.placa;
-      el("inputDetalle").value=r.detalle;
-      editId = id;
-      el("btnGuardar").textContent = "ACTUALIZAR";
-      el("btnGuardar").style.background = "#f59e0b";
-      window.scrollTo(0,0);
+      el("inputAuto").value=r.auto; el("inputColor").value=r.color; el("inputOrden").value=r.orden; 
+      el("inputPlaca").value=r.placa||""; el("inputObservacion").value=r.observacion||r.detalle||"";
+      conceptosForm = (r.conceptos && r.conceptos.length) ? [...r.conceptos] : [{nombre:"Aseguradora",monto:"",porcentaje:""}];
+      renderConceptInputs();
+      editId = id; el("btnGuardar").textContent = "ACTUALIZAR"; el("btnGuardar").style.background = "#eab308";
+      window.scrollTo({top:0, behavior:'smooth'});
     };
 
-    window.del = async (id) => {
-      if(confirm("¿Eliminar registro?")) await deleteDoc(doc(db, "registros", id));
-    };
-
+    window.del = async (id) => { if(confirm("¿Eliminar?")) await deleteDoc(doc(db,"registros",id)); };
     el("btnLimpiar").onclick = limpiar;
-    el("inputBuscar").addEventListener("input", filtrar);
-    el("dateDesde").addEventListener("change", filtrar);
-    el("dateHasta").addEventListener("change", filtrar);
-    
-    el("btnLimpiarFiltros").onclick = () => {
-      el("dateDesde").value = "";
-      el("dateHasta").value = "";
-      el("inputBuscar").value = "";
-      filtrar();
-    };
 
-    // CSV
-    el("btnCSV").onclick = () => {
-      if(!viewDocs.length) return alert("Sin datos");
-      const headers = ["AUTO","COLOR","ORDEN","PLACA","OBSERVACION","FECHA"];
-      const rows = viewDocs.map(r => [
-        r.auto, r.color, r.orden, r.placa, (r.detalle||"").replace(/\n/g," "), formatLatino(r.fecha)
-      ]);
-      let csv = headers.join(",") + "\n" + rows.map(r => r.map(c => `"${c || ''}"`).join(",")).join("\n");
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(new Blob([csv], {type: "text/csv;charset=utf-8;"}));
-      link.download = "registros_pintura.csv";
-      link.click();
-    };
-
-    // PDF
     el("btnPDF").onclick = () => {
-       if(!viewDocs.length) return alert("Sin datos");
-       const { jsPDF } = window.jspdf;
-       const doc = new jsPDF();
-       
-       doc.setFontSize(16);
-       doc.text("Pintura", 105, 20, null, null, "center");
-       
-       // Muestra el rango de fechas con formato DD-MM-AAAA
-       doc.setFontSize(10);
-       doc.text(textoPeriodo, 105, 28, null, null, "center");
-
-       const body = viewDocs.map(r => [
-         r.auto, 
-         r.color, 
-         r.orden, 
-         r.placa, 
-         r.detalle, 
-         formatLatino(r.fecha) // Fecha formateada en la tabla del PDF tambien
-       ]);
-       
-       doc.autoTable({ 
-         head:[["AUTO","COLOR","ORDEN","PLACA","OBSERVACION","FECHA"]], 
-         body: body, 
-         startY: 35,
-         headStyles: { fillColor: [239, 68, 68] },
-         columnStyles: { 4: { cellWidth: 50 } } 
-       });
-       doc.save("reporte_pintura.pdf");
+      if(!viewDocs.length) return alert("Sin datos");
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.text("Reporte Pintura", 14, 20);
+      doc.setFontSize(10); 
+      doc.text(el("textoPeriodo").innerText, 14, 28);
+      
+      const body = viewDocs.map(r => [
+         r.auto + "\n" + r.color, r.orden, r.placa||"", r.observacion||r.detalle||""
+      ]);
+      doc.autoTable({
+        head: [["AUTO / COLOR", "ORDEN", "PLACA", "OBSERVACION"]],
+        body, startY: 35, headStyles: {fillColor:[239,68,68]}
+      });
+      doc.save("reporte.pdf");
     };
 
-    el("btnLogout").onclick = () => signOut(auth);
+    el("btnCSV").onclick = () => {
+       const rows = viewDocs.map(r => [r.auto, r.color, r.orden, r.placa, (r.observacion||r.detalle||"").replace(/\n/g," ")]);
+       const csv = "AUTO,COLOR,ORDEN,PLACA,OBS\n" + rows.map(r => r.join(",")).join("\n");
+       const a = document.createElement("a");
+       a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download = "data.csv"; a.click();
+    };
+
+    // AUTH
+    el("inputBuscar").oninput = filtrar; el("dateDesde").onchange = filtrar; el("dateHasta").onchange = filtrar;
+    el("btnLimpiarFiltros").onclick = () => { el("dateDesde").value=""; el("dateHasta").value=""; el("inputBuscar").value=""; filtrar(); };
+
     el("btnLogin").onclick = async () => {
       try { await signInWithEmailAndPassword(auth, el("loginEmail").value, el("loginPassword").value); }
-      catch(e) { el("loginError").textContent = "Credenciales incorrectas"; }
+      catch(e) { el("loginError").innerText = "Error credenciales"; }
     };
+    el("btnLogout").onclick = () => signOut(auth);
 
     onAuthStateChanged(auth, (user) => {
       if(user) {
-        el("loginWrapper").style.display = "none";
-        el("appWrapper").style.display = "block";
-        
-        // Orden ASCENDENTE para que nuevos salgan al final
-        onSnapshot(query(colRef, orderBy("createdAt", "asc")), (snap) => {
-          allDocs = snap.docs.map(d => {
-             let f = d.data().fecha;
-             if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
-             return {id: d.id, ...d.data(), fecha: f||""};
+        el("loginWrapper").style.display = "none"; el("appWrapper").style.display = "block";
+        onSnapshot(docConfig, (s) => { 
+            if(s.exists() && el("inputMaterial")) { 
+                materialCost = s.data().totalMaterial||0; 
+                el("inputMaterial").value = materialCost; 
+                filtrar(); 
+            } 
+        });
+        onSnapshot(query(colRef, orderBy("createdAt","asc")), (s) => {
+          allDocs = s.docs.map(d => {
+             let f = d.data().fecha; if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
+             return {id:d.id, ...d.data(), fecha:f||""};
           });
           filtrar();
         });
-      } else {
-        el("loginWrapper").style.display = "flex";
-        el("appWrapper").style.display = "none";
-      }
+        limpiar();
+      } else { el("loginWrapper").style.display = "flex"; el("appWrapper").style.display = "none"; }
     });
   </script>
 </body>
