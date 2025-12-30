@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Pintura</title>
+  <title>Pintura - Gestión Profesional</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <style>
@@ -19,7 +19,7 @@
     body { margin: 0; padding: 0; min-height: 100vh; background: var(--bg-body); color: var(--text-main); font-size: 16px; padding-bottom: 80px; }
 
     /* =========================================
-       LOGIN ESTILO DARK LUXURY (TU CÓDIGO)
+       LOGIN ESTILO DARK LUXURY
        ========================================= */
     .login-shell {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
@@ -49,7 +49,7 @@
 
 
     /* =========================================
-       APP PRINCIPAL (ESTILO NUEVO + FIXES)
+       APP PRINCIPAL
        ========================================= */
     .app-shell { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
 
@@ -69,8 +69,6 @@
     .stat-card.dark .stat-label { color: #94a3b8; }
     .stat-card.dark .stat-val { color: #fff; }
 
-    /* --- FIX DEL INPUT MATERIAL --- */
-    /* Esto arregla que se ponga blanco al escribir */
     .input-ghost {
       background: transparent;
       border: none;
@@ -79,7 +77,7 @@
       font-weight: 800;
       font-size: 1.3rem;
       text-align: center;
-      color: #ffffff !important; /* FORZAR COLOR BLANCO */
+      color: #ffffff !important; 
       outline: none;
     }
     .input-ghost::placeholder { color: rgba(255,255,255,0.3); }
@@ -186,7 +184,7 @@
         <span class="stat-label">Material Semanal</span>
         <div>
           $ <input type="number" id="inputMaterial" class="input-ghost" placeholder="0">
-          <span id="btnSaveMat" style="cursor:pointer; font-size:1.2rem;" title="Guardar">💾</span>
+          <span id="btnSaveMat" style="cursor:pointer; font-size:1.7rem;" title="Guardar">💾</span>
         </div>
       </div>
     </div>
@@ -392,9 +390,12 @@
       conceptosForm.forEach((item, i) => {
         const div = document.createElement("div");
         div.className = "concept-item";
+        
+        // AQUI AGREGUE "Reacondicionado"
         div.innerHTML = `
           <select class="app-input" style="margin:0" onchange="window.updCon(${i},'nombre',this.value)">
             <option value="Aseguradora" ${item.nombre==='Aseguradora'?'selected':''}>Aseguradora</option>
+            <option value="Reacondicionado" ${item.nombre==='Reacondicionado'?'selected':''}>Reacondicionado</option>
             <option value="Rin" ${item.nombre==='Rin'?'selected':''}>Rin</option>
             <option value="Particular" ${item.nombre==='Particular'?'selected':''}>Particular</option>
             <option value="Otro" ${item.nombre==='Otro'?'selected':''}>Otro</option>
@@ -496,29 +497,132 @@
     window.del = async (id) => { if(confirm("¿Eliminar?")) await deleteDoc(doc(db,"registros",id)); };
     el("btnLimpiar").onclick = limpiar;
 
-    el("btnPDF").onclick = () => {
-      if(!viewDocs.length) return alert("Sin datos");
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text("Reporte Pintura", 14, 20);
-      doc.setFontSize(10); 
-      doc.text(el("textoPeriodo").innerText, 14, 28);
-      
-      const body = viewDocs.map(r => [
-         r.auto + "\n" + r.color, r.orden, r.placa||"", r.observacion||r.detalle||""
-      ]);
-      doc.autoTable({
-        head: [["AUTO / COLOR", "ORDEN", "PLACA", "OBSERVACION"]],
-        body, startY: 35, headStyles: {fillColor:[239,68,68]}
-      });
-      doc.save("reporte.pdf");
-    };
-
     el("btnCSV").onclick = () => {
        const rows = viewDocs.map(r => [r.auto, r.color, r.orden, r.placa, (r.observacion||r.detalle||"").replace(/\n/g," ")]);
        const csv = "AUTO,COLOR,ORDEN,PLACA,OBS\n" + rows.map(r => r.join(",")).join("\n");
        const a = document.createElement("a");
        a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download = "data.csv"; a.click();
+    };
+
+    // ============================================
+    //    NUEVA LÓGICA DE PDF PROFESIONAL
+    // ============================================
+    el("btnPDF").onclick = () => {
+      if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // COLORES
+      const colorPrimary = [239, 68, 68]; // Rojo
+      const colorDark = [15, 23, 42];     // Azul oscuro
+      const colorGray = [100, 116, 139];
+      
+      // ENCABEZADO
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(...colorDark);
+      doc.text("REPORTE DE PINTURA", 14, 20);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...colorGray);
+     
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text(el("textoPeriodo").innerText, 14, 34);
+
+      // PROCESAMIENTO
+      let sumaTotalGanado = 0;
+
+      const tableBody = viewDocs.map(r => {
+        let totalOrden = 0;
+        let detalleTexto = "";
+        
+        if(r.conceptos && r.conceptos.length) {
+            r.conceptos.forEach(c => {
+                const m = parseFloat(c.monto)||0;
+                const p = parseFloat(c.porcentaje)||0;
+                const ganancia = m * (p/100);
+                totalOrden += ganancia;
+                detalleTexto += `• ${c.nombre}: $${ganancia.toFixed(0)}\n`;
+            });
+        } else {
+            detalleTexto = "Sin conceptos";
+        }
+        
+        sumaTotalGanado += totalOrden;
+
+        return [
+          r.orden,
+          r.auto + "\n" + r.color,
+          formatLatino(r.fecha),
+          detalleTexto,
+          (r.observacion || ""),
+          "$" + totalOrden.toFixed(0)
+        ];
+      });
+
+      // TABLA
+      doc.autoTable({
+        startY: 40,
+        head: [["ORDEN", "VEHÍCULO", "CONCEPTO", "NOTAS", "TOTAL"]],
+        body: tableBody,
+        theme: 'grid',
+        headStyles: { 
+            fillColor: colorPrimary, 
+            textColor: 255, 
+            fontStyle: 'bold',
+            halign: 'center'
+        },
+        columnStyles: {
+            0: { halign: 'center', fontStyle: 'bold', cellWidth: 20 },
+            2: { halign: 'center', cellWidth: 25 },
+            5: { halign: 'right', fontStyle: 'bold', textColor: [22, 163, 74] }
+        },
+        styles: { fontSize: 9, cellPadding: 3, valign: 'middle' },
+      });
+
+      // RESUMEN FINAL
+      let finalY = doc.lastAutoTable.finalY + 10;
+      if (finalY > 250) { doc.addPage(); finalY = 20; }
+
+      const gastoMaterial = parseFloat(el("inputMaterial").value) || 0;
+      const utilidadNeta = sumaTotalGanado - gastoMaterial;
+
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(203, 213, 225);
+      doc.rect(120, finalY, 75, 35, 'FD');
+
+      doc.setFontSize(10);
+      doc.setTextColor(...colorGray);
+      doc.text("RESUMEN DEL PERIODO", 125, finalY + 8);
+
+      doc.setFontSize(11);
+      doc.setTextColor(0,0,0);
+      doc.text("Total Ganado:", 125, finalY + 16);
+      doc.setFont("helvetica", "bold");
+      doc.text("$" + sumaTotalGanado.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 16, { align: "right" });
+
+      doc.setFont("helvetica", "normal");
+      doc.text("(-) Material:", 125, finalY + 23);
+      doc.setTextColor(220, 38, 38);
+      doc.text("-$" + gastoMaterial.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 23, { align: "right" });
+
+      doc.setDrawColor(200, 200, 200);
+      doc.line(125, finalY + 26, 190, finalY + 26);
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.setTextColor(...colorDark);
+      doc.text("UTILIDAD NETA:", 125, finalY + 32);
+      
+      if(utilidadNeta >= 0) doc.setTextColor(22, 163, 74); 
+      else doc.setTextColor(220, 38, 38);
+
+      doc.text("$" + utilidadNeta.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 32, { align: "right" });
+
+      doc.save("Reporte_Pintura_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
     // AUTH
