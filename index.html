@@ -224,7 +224,8 @@
       <div class="btn-group">
         <button id="btnLimpiarFiltros" class="btn-tool">❌ Filtro</button>
         <button id="btnCSV" class="btn-tool">📊 CSV</button>
-        <button id="btnPDF" class="btn-tool">📄 PDF</button>
+        <button id="btnPDFSimple" class="btn-tool" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">📄 Ordenes</button>
+        <button id="btnPDF" class="btn-tool" style="background:#fef2f2; color:#b91c1c; border-color:#fecaca;">📄 Total</button>
       </div>
       <div id="textoPeriodo" style="text-align:center; font-size:0.75rem; color:#94a3b8; margin-top:10px;">...</div>
     </div>
@@ -391,7 +392,6 @@
         const div = document.createElement("div");
         div.className = "concept-item";
         
-        // AQUI AGREGUE "Reacondicionado"
         div.innerHTML = `
           <select class="app-input" style="margin:0" onchange="window.updCon(${i},'nombre',this.value)">
             <option value="Aseguradora" ${item.nombre==='Aseguradora'?'selected':''}>Aseguradora</option>
@@ -505,15 +505,14 @@
     };
 
     // ============================================
-    //    NUEVA LÓGICA DE PDF PROFESIONAL
+    //    PDF SIMPLE (SOLO ORDENES - SIN DINERO)
     // ============================================
-    el("btnPDF").onclick = () => {
+    el("btnPDFSimple").onclick = () => {
       if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
       
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       
-      // COLORES
       const colorPrimary = [239, 68, 68]; // Rojo
       const colorDark = [15, 23, 42];     // Azul oscuro
       const colorGray = [100, 116, 139];
@@ -522,17 +521,72 @@
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.setTextColor(...colorDark);
-      doc.text("REPORTE DE PINTURA", 14, 20);
+      doc.text("LISTADO DE ORDENES", 14, 20); // Titulo diferente
       
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
       doc.setTextColor(...colorGray);
-     
+      
       doc.setFontSize(11);
       doc.setTextColor(0, 0, 0);
       doc.text(el("textoPeriodo").innerText, 14, 34);
 
-      // PROCESAMIENTO
+      // CUERPO DE LA TABLA (SIN DINERO)
+      const tableBody = viewDocs.map(r => [
+          r.orden,
+          r.auto,
+          r.color,
+          r.placa || "-",
+          (r.observacion || r.detalle || "")
+      ]);
+
+      doc.autoTable({
+        startY: 40,
+        head: [["ORDEN", "AUTO", "COLOR", "PLACA", "NOTAS"]],
+        body: tableBody,
+        theme: 'grid',
+        headStyles: { 
+            fillColor: colorPrimary, 
+            textColor: 255, 
+            fontStyle: 'bold',
+            halign: 'center'
+        },
+        columnStyles: {
+            0: { halign: 'center', fontStyle: 'bold', cellWidth: 25 },
+            3: { halign: 'center' }
+        },
+        styles: { fontSize: 10, cellPadding: 3, valign: 'middle' },
+      });
+
+      doc.save("Ordenes_Taller_" + new Date().toISOString().slice(0,10) + ".pdf");
+    };
+
+    // ============================================
+    //    PDF FINANCIERO (CON DINERO Y TOTALES)
+    // ============================================
+    el("btnPDF").onclick = () => {
+      if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      const colorPrimary = [239, 68, 68];
+      const colorDark = [15, 23, 42];
+      const colorGray = [100, 116, 139];
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(18);
+      doc.setTextColor(...colorDark);
+      doc.text("REPORTE FINANCIERO", 14, 20);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(...colorGray);
+      
+      doc.setFontSize(11);
+      doc.setTextColor(0, 0, 0);
+      doc.text(el("textoPeriodo").innerText, 14, 34);
+
       let sumaTotalGanado = 0;
 
       const tableBody = viewDocs.map(r => {
@@ -556,17 +610,15 @@
         return [
           r.orden,
           r.auto + "\n" + r.color,
-          formatLatino(r.fecha),
           detalleTexto,
           (r.observacion || ""),
           "$" + totalOrden.toFixed(0)
         ];
       });
 
-      // TABLA
       doc.autoTable({
         startY: 40,
-        head: [["ORDEN", "VEHÍCULO", "CONCEPTO", "NOTAS", "TOTAL"]],
+        head: [["ORDEN", "VEHÍCULO", "CONCEPTOS", "NOTAS", "TOTAL"]],
         body: tableBody,
         theme: 'grid',
         headStyles: { 
@@ -577,13 +629,11 @@
         },
         columnStyles: {
             0: { halign: 'center', fontStyle: 'bold', cellWidth: 20 },
-            2: { halign: 'center', cellWidth: 25 },
-            5: { halign: 'right', fontStyle: 'bold', textColor: [22, 163, 74] }
+            4: { halign: 'right', fontStyle: 'bold', textColor: [22, 163, 74] }
         },
         styles: { fontSize: 9, cellPadding: 3, valign: 'middle' },
       });
 
-      // RESUMEN FINAL
       let finalY = doc.lastAutoTable.finalY + 10;
       if (finalY > 250) { doc.addPage(); finalY = 20; }
 
@@ -622,7 +672,7 @@
 
       doc.text("$" + utilidadNeta.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 32, { align: "right" });
 
-      doc.save("Reporte_Pintura_" + new Date().toISOString().slice(0,10) + ".pdf");
+      doc.save("Reporte_Finanzas_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
     // AUTH
