@@ -288,21 +288,53 @@
         return `${parts[2]}/${parts[1]}/${parts[0]}`; 
     };
 
+    // --- NUEVA FUNCION: OBTENER CLAVE DE SEMANA (VIERNES) ---
+    const getWeekKey = () => {
+       const d = new Date(); d.setHours(0,0,0,0);
+       const day = d.getDay();
+       const sub = (day >= 5) ? (day - 5) : (day + 2);
+       d.setDate(d.getDate() - sub);
+       const off = d.getTimezoneOffset()*60000;
+       return "mat_" + new Date(d.getTime()-off).toISOString().slice(0,10).replace(/-/g,"");
+    };
+
     // RENDERIZADO DUAL
     function render(lista) {
       viewDocs = lista;
       const tb = el("tbodyRegistros");
       const mob = el("mobileContainer");
+      
+      // Limpiar vista
       tb.innerHTML = "";
       mob.innerHTML = "";
 
+      // 1. PRIMERO: Calcular Dinero (recorremos aunque no pintemos)
       let totalComisiones = 0;
+      lista.forEach(r => {
+        if(r.conceptos && r.conceptos.length > 0) {
+          r.conceptos.forEach(c => {
+            const m = parseFloat(c.monto)||0;
+            const p = parseFloat(c.porcentaje)||0;
+            totalComisiones += m * (p/100);
+          });
+        }
+      });
 
+      // 2. SEGUNDO: Actualizar Dashboard
+      if(el("dispComisiones")) el("dispComisiones").textContent = formatMoney(totalComisiones);
+      
+      const neta = totalComisiones - materialCost;
+      if(el("dispNeta")) el("dispNeta").textContent = formatMoney(neta);
+      if(el("cardNeta")) el("cardNeta").style.background = neta < 0 ? "#7f1d1d" : "#0f172a";
+
+      // 3. TERCERO: Verificar si hay datos
       if(!lista.length) {
         mob.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8;">No hay registros</div>`;
+        tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">No hay datos en este periodo</td></tr>`;
         return;
       }
 
+      // 4. CUARTO: Pintar
       lista.forEach(r => {
         let totalOrden = 0;
         let htmlDesglose = "";
@@ -314,17 +346,16 @@
             const p = parseFloat(c.porcentaje)||0;
             const g = m * (p/100);
             totalOrden += g;
+            
             htmlDesglose += `<div style="font-size:0.8rem; color:#64748b">${c.nombre}: <b>$${g.toFixed(0)}</b></div>`;
             arrayDesglose.push({nombre: c.nombre, val: g});
           });
         } else {
           htmlDesglose = "<span style='color:#cbd5e1; font-size:0.8rem;'>--</span>";
         }
-        totalComisiones += totalOrden;
 
         const obs = r.observacion || r.detalle || "";
 
-        // 1. ESCRITORIO
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td><b>${r.auto}</b><br><span style="font-size:0.8rem; color:#64748b">${r.color}</span></td>
@@ -332,13 +363,12 @@
           <td>${htmlDesglose}<div style="border-top:1px solid #e2e8f0; font-weight:bold; color:var(--success); margin-top:2px;">Total: $${totalOrden.toFixed(0)}</div></td>
           <td style="font-size:0.85rem;">${formatLatino(r.fecha)}</td>
           <td style="text-align:right;">
-             <button onclick="window.edit('${r.id}')" style="cursor:pointer; border:none; background:none; font-size:1.2rem;">✏️</button>
-             <button onclick="window.del('${r.id}')" style="cursor:pointer; border:none; background:none; color:#ef4444; font-size:1.2rem;">🗑️</button>
+             <button onclick="window.edit('${r.id}')" style="cursor:pointer; border:none; background:none; font-size:1.2rem;" title="Editar">✏️</button>
+             <button onclick="window.del('${r.id}')" style="cursor:pointer; border:none; background:none; color:#ef4444; font-size:1.2rem;" title="Borrar">🗑️</button>
           </td>
         `;
         tb.appendChild(tr);
 
-        // 2. MÓVIL
         let htmlDetalleMovil = "";
         if(arrayDesglose.length > 0) {
             arrayDesglose.forEach(item => {
@@ -377,12 +407,6 @@
         `;
         mob.appendChild(card);
       });
-
-      // Actualizar Dashboard
-      if(el("dispComisiones")) el("dispComisiones").textContent = formatMoney(totalComisiones);
-      const neta = totalComisiones - materialCost;
-      if(el("dispNeta")) el("dispNeta").textContent = formatMoney(neta);
-      if(el("cardNeta")) el("cardNeta").style.background = neta < 0 ? "#7f1d1d" : "#0f172a";
     }
 
     // CONCEPTOS FORM
@@ -469,11 +493,14 @@
       } catch(e) { alert(e.message); }
     };
 
+    // --- NUEVA LÓGICA DE GUARDADO DE MATERIAL (POR SEMANA) ---
     if(el("btnSaveMat")){
         el("btnSaveMat").onclick = async () => {
            const v = parseFloat(el("inputMaterial").value)||0;
-           await setDoc(docConfig, { totalMaterial: v }, { merge: true });
-           alert("Costo Material Guardado");
+           // Guardamos con la clave dinámica (ej: mat_20231027)
+           const key = getWeekKey();
+           await setDoc(docConfig, { [key]: v }, { merge: true });
+           alert("Costo Material Guardado para esta semana");
         };
     }
 
@@ -504,24 +531,20 @@
        a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download = "data.csv"; a.click();
     };
 
-    // ============================================
-    //    PDF SIMPLE (SOLO ORDENES - SIN DINERO)
-    // ============================================
     el("btnPDFSimple").onclick = () => {
       if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
       
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       
-      const colorPrimary = [239, 68, 68]; // Rojo
-      const colorDark = [15, 23, 42];     // Azul oscuro
+      const colorPrimary = [239, 68, 68];
+      const colorDark = [15, 23, 42];
       const colorGray = [100, 116, 139];
       
-      // ENCABEZADO
       doc.setFont("helvetica", "bold");
       doc.setFontSize(18);
       doc.setTextColor(...colorDark);
-      doc.text("LISTADO DE ORDENES", 14, 20); // Titulo diferente
+      doc.text("LISTADO DE ORDENES", 14, 20);
       
       doc.setFontSize(10);
       doc.setFont("helvetica", "normal");
@@ -531,7 +554,6 @@
       doc.setTextColor(0, 0, 0);
       doc.text(el("textoPeriodo").innerText, 14, 34);
 
-      // CUERPO DE LA TABLA (SIN DINERO)
       const tableBody = viewDocs.map(r => [
           r.orden,
           r.auto,
@@ -561,9 +583,6 @@
       doc.save("Ordenes_Taller_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
-    // ============================================
-    //    PDF FINANCIERO (CON DINERO Y TOTALES)
-    // ============================================
     el("btnPDF").onclick = () => {
       if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
       
@@ -690,7 +709,10 @@
         el("loginWrapper").style.display = "none"; el("appWrapper").style.display = "block";
         onSnapshot(docConfig, (s) => { 
             if(s.exists() && el("inputMaterial")) { 
-                materialCost = s.data().totalMaterial||0; 
+                // --- NUEVA LÓGICA DE CARGA DE MATERIAL ---
+                // Leemos el material SOLO correspondiente a la semana actual
+                const key = getWeekKey();
+                materialCost = s.data()[key] || 0; // Si no existe clave, es 0
                 el("inputMaterial").value = materialCost; 
                 filtrar(); 
             } 
