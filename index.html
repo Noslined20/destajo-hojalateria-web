@@ -13,13 +13,14 @@
       --bg-body: #f8fafc;
       --text-main: #0f172a;
       --success: #16a34a;
+      --pending: #dc2626; /* Rojo para pendientes */
     }
 
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { margin: 0; padding: 0; min-height: 100vh; background: var(--bg-body); color: var(--text-main); font-size: 16px; padding-bottom: 80px; }
 
     /* =========================================
-       LOGIN ESTILO DARK LUXURY
+        LOGIN ESTILO DARK LUXURY
        ========================================= */
     .login-shell {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
@@ -47,9 +48,8 @@
     .btn-login:hover { background: #dc2626; }
     #loginError { color: #fca5a5; margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
 
-
     /* =========================================
-       APP PRINCIPAL
+        APP PRINCIPAL
        ========================================= */
     .app-shell { max-width: 1000px; margin: 0 auto; padding: 15px; display: none; }
 
@@ -57,9 +57,10 @@
     .app-logo { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.4rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 2px; }
     .btn-logout { background: white; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-left: auto; text-transform: uppercase; cursor: pointer; }
 
-    /* DASHBOARD FINANCIERO */
-    .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-    @media (max-width: 600px) { .stats-row { grid-template-columns: 1fr; } }
+    /* DASHBOARD FINANCIERO - AJUSTADO A 4 COLUMNAS EN DESKTOP */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    @media (max-width: 850px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .stats-row { grid-template-columns: 1fr; } }
 
     .stat-card { background: white; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .stat-label { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; display: block; margin-bottom: 5px; }
@@ -70,18 +71,23 @@
     .stat-card.dark .stat-val { color: #fff; }
 
     .input-ghost {
-      background: transparent;
-      border: none;
-      border-bottom: 2px dashed #94a3b8;
-      width: 90px;
-      font-weight: 800;
-      font-size: 1.3rem;
-      text-align: center;
-      color: #ffffff !important; 
-      outline: none;
+      background: transparent; border: none; border-bottom: 2px dashed #94a3b8;
+      width: 90px; font-weight: 800; font-size: 1.3rem; text-align: center; color: #ffffff !important; outline: none;
     }
     .input-ghost::placeholder { color: rgba(255,255,255,0.3); }
     .input-ghost:focus { border-bottom-color: var(--primary); }
+
+    /* ESTILOS DE ESTADO (NUEVO) */
+    .row-pending { border-left: 8px solid var(--pending) !important; }
+    .row-finished { border-left: 8px solid var(--success) !important; background-color: #f0fdf4 !important; }
+    
+    .btn-status-toggle {
+      border: none; background: #f1f5f9; border-radius: 50%;
+      width: 32px; height: 32px; cursor: pointer; font-size: 1.1rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.1s;
+    }
+    .btn-status-toggle:active { transform: scale(0.9); }
 
     /* FORMULARIO */
     .main-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #e2e8f0; }
@@ -91,7 +97,6 @@
     @media (max-width: 500px) { .form-row { flex-direction: column; gap: 10px; } }
 
     label { display: block; font-size: 0.7rem; font-weight: 800; color: #64748b; margin-bottom: 6px; margin-left: 4px; text-transform: uppercase; }
-    
     input.app-input, textarea, select { 
       width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 16px; background: #f8fafc; outline: none; appearance: none; color: #1e293b; font-weight: 500; 
     }
@@ -175,6 +180,10 @@
       <div class="stat-card">
         <span class="stat-label">Ganado</span>
         <div class="stat-val" style="color:var(--primary)" id="dispComisiones">$0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Autos Semanales</span>
+        <div class="stat-val" id="dispAutos">0 / 0</div>
       </div>
       <div class="stat-card dark" id="cardNeta">
         <span class="stat-label">Ganancia Neta</span>
@@ -288,7 +297,6 @@
         return `${parts[2]}/${parts[1]}/${parts[0]}`; 
     };
 
-    // --- NUEVA FUNCION: OBTENER CLAVE DE SEMANA (VIERNES) ---
     const getWeekKey = () => {
        const d = new Date(); d.setHours(0,0,0,0);
        const day = d.getDay();
@@ -298,43 +306,48 @@
        return "mat_" + new Date(d.getTime()-off).toISOString().slice(0,10).replace(/-/g,"");
     };
 
+    // --- NUEVA FUNCION: TOGGLE DE ESTADO ---
+    window.toggleStatus = async (id, currentStatus) => {
+        try {
+            await updateDoc(doc(db, "registros", id), { finalizado: !currentStatus });
+        } catch(e) { console.error("Error al actualizar estado:", e); }
+    };
+
     // RENDERIZADO DUAL
     function render(lista) {
       viewDocs = lista;
       const tb = el("tbodyRegistros");
       const mob = el("mobileContainer");
       
-      // Limpiar vista
       tb.innerHTML = "";
       mob.innerHTML = "";
 
-      // 1. PRIMERO: Calcular Dinero (recorremos aunque no pintemos)
       let totalComisiones = 0;
+      let autosTerminados = 0;
+      let autosTotales = lista.length;
+
       lista.forEach(r => {
         if(r.conceptos && r.conceptos.length > 0) {
           r.conceptos.forEach(c => {
-            const m = parseFloat(c.monto)||0;
-            const p = parseFloat(c.porcentaje)||0;
-            totalComisiones += m * (p/100);
+            totalComisiones += (parseFloat(c.monto)||0) * ((parseFloat(c.porcentaje)||0)/100);
           });
         }
+        if(r.finalizado) autosTerminados++;
       });
 
-      // 2. SEGUNDO: Actualizar Dashboard
       if(el("dispComisiones")) el("dispComisiones").textContent = formatMoney(totalComisiones);
+      if(el("dispAutos")) el("dispAutos").textContent = `${autosTerminados} / ${autosTotales}`;
       
       const neta = totalComisiones - materialCost;
       if(el("dispNeta")) el("dispNeta").textContent = formatMoney(neta);
       if(el("cardNeta")) el("cardNeta").style.background = neta < 0 ? "#7f1d1d" : "#0f172a";
 
-      // 3. TERCERO: Verificar si hay datos
       if(!lista.length) {
         mob.innerHTML = `<div style="text-align:center; padding:20px; color:#94a3b8;">No hay registros</div>`;
         tb.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px; color:#94a3b8;">No hay datos en este periodo</td></tr>`;
         return;
       }
 
-      // 4. CUARTO: Pintar
       lista.forEach(r => {
         let totalOrden = 0;
         let htmlDesglose = "";
@@ -346,46 +359,47 @@
             const p = parseFloat(c.porcentaje)||0;
             const g = m * (p/100);
             totalOrden += g;
-            
             htmlDesglose += `<div style="font-size:0.8rem; color:#64748b">${c.nombre}: <b>$${g.toFixed(0)}</b></div>`;
             arrayDesglose.push({nombre: c.nombre, val: g});
           });
-        } else {
-          htmlDesglose = "<span style='color:#cbd5e1; font-size:0.8rem;'>--</span>";
         }
 
+        const statusClass = r.finalizado ? "row-finished" : "row-pending";
+        const statusIcon = r.finalizado ? "✅" : "⭕";
         const obs = r.observacion || r.detalle || "";
 
+        // Pintar Fila Escritorio
         const tr = document.createElement("tr");
+        tr.className = statusClass;
         tr.innerHTML = `
           <td><b>${r.auto}</b><br><span style="font-size:0.8rem; color:#64748b">${r.color}</span></td>
           <td><span style="background:#eff6ff; color:#3b82f6; padding:3px 6px; border-radius:4px; font-weight:bold; font-size:0.8rem;">${r.orden}</span></td>
           <td>${htmlDesglose}<div style="border-top:1px solid #e2e8f0; font-weight:bold; color:var(--success); margin-top:2px;">Total: $${totalOrden.toFixed(0)}</div></td>
           <td style="font-size:0.85rem;">${formatLatino(r.fecha)}</td>
           <td style="text-align:right;">
-             <button onclick="window.edit('${r.id}')" style="cursor:pointer; border:none; background:none; font-size:1.2rem;" title="Editar">✏️</button>
-             <button onclick="window.del('${r.id}')" style="cursor:pointer; border:none; background:none; color:#ef4444; font-size:1.2rem;" title="Borrar">🗑️</button>
+             <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
+               <button class="btn-status-toggle" onclick="window.toggleStatus('${r.id}', ${r.finalizado})" title="Cambiar Estado">${statusIcon}</button>
+               <button onclick="window.edit('${r.id}')" style="cursor:pointer; border:none; background:none; font-size:1.2rem;" title="Editar">✏️</button>
+               <button onclick="window.del('${r.id}')" style="cursor:pointer; border:none; background:none; color:#ef4444; font-size:1.2rem;" title="Borrar">🗑️</button>
+             </div>
           </td>
         `;
         tb.appendChild(tr);
 
+        // Pintar Card Móvil
         let htmlDetalleMovil = "";
         if(arrayDesglose.length > 0) {
             arrayDesglose.forEach(item => {
-                htmlDetalleMovil += `
-                <div class="m-detail-row">
-                    <span>${item.nombre}</span>
-                    <b>$${item.val.toFixed(0)}</b>
-                </div>`;
+                htmlDetalleMovil += `<div class="m-detail-row"><span>${item.nombre}</span><b>$${item.val.toFixed(0)}</b></div>`;
             });
-        } else { htmlDetalleMovil = "<span style='color:#cbd5e1'>Sin conceptos</span>"; }
+        }
 
         const card = document.createElement("div");
-        card.className = "m-card";
+        card.className = `m-card ${statusClass}`;
         card.innerHTML = `
           <div class="m-header" onclick="this.nextElementSibling.classList.toggle('open')">
             <div class="m-info">
-              <h3>${r.auto}</h3>
+              <h3>${statusIcon} ${r.auto}</h3>
               <p>${r.color} • ${formatLatino(r.fecha)}</p>
               <span class="m-badge">#${r.orden}</span>
             </div>
@@ -395,10 +409,11 @@
             </div>
           </div>
           <div class="m-body">
-            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">
-               ${htmlDetalleMovil}
-            </div>
+            <div style="margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;">${htmlDetalleMovil}</div>
             ${obs ? `<div style="font-style:italic; font-size:0.8rem; color:#64748b; background:#fff; padding:8px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:10px;">📝 ${obs}</div>` : ''}
+            <button class="btn-save" style="background:${r.finalizado ? '#16a34a' : '#64748b'}; margin-bottom:10px; font-size:0.8rem; padding:10px;" onclick="window.toggleStatus('${r.id}', ${r.finalizado})">
+                ${r.finalizado ? '♻️ MARCAR PENDIENTE' : '✔️ FINALIZAR TRABAJO'}
+            </button>
             <div class="m-actions">
               <button class="btn-act" style="background:#e0f2fe; color:#0369a1" onclick="window.edit('${r.id}')">Editar</button>
               <button class="btn-act" style="background:#fee2e2; color:#b91c1c" onclick="window.del('${r.id}')">Borrar</button>
@@ -415,7 +430,6 @@
       conceptosForm.forEach((item, i) => {
         const div = document.createElement("div");
         div.className = "concept-item";
-        
         div.innerHTML = `
           <select class="app-input" style="margin:0" onchange="window.updCon(${i},'nombre',this.value)">
             <option value="Aseguradora" ${item.nombre==='Aseguradora'?'selected':''}>Aseguradora</option>
@@ -441,7 +455,6 @@
       const q = el("inputBuscar").value.trim().toUpperCase();
       const d1 = el("dateDesde").value;
       const d2 = el("dateHasta").value;
-      
       let lista = [...allDocs];
       let txt = "Mostrando todo";
 
@@ -455,16 +468,16 @@
       };
 
       if(q) {
-         lista = lista.filter(r => String(r.orden).includes(q) || r.auto.includes(q));
-         txt = `Busqueda: ${q}`;
+          lista = lista.filter(r => String(r.orden).includes(q) || r.auto.includes(q));
+          txt = `Busqueda: ${q}`;
       } else if (d1 || d2) {
-         if(d1) lista = lista.filter(r => r.fecha >= d1);
-         if(d2) lista = lista.filter(r => r.fecha <= d2);
-         txt = `Del ${formatLatino(d1)} al ${formatLatino(d2)}`;
+          if(d1) lista = lista.filter(r => r.fecha >= d1);
+          if(d2) lista = lista.filter(r => r.fecha <= d2);
+          txt = `Del ${formatLatino(d1)} al ${formatLatino(d2)}`;
       } else {
-         const vier = getViernes();
-         lista = lista.filter(r => r.fecha >= vier);
-         txt = `Semana actual (Desde ${formatLatino(vier)})`;
+          const vier = getViernes();
+          lista = lista.filter(r => r.fecha >= vier);
+          txt = `Semana actual (Desde ${formatLatino(vier)})`;
       }
       
       if(el("textoPeriodo")) el("textoPeriodo").innerText = txt;
@@ -478,12 +491,17 @@
       if(!auto || !orden) return alert("Falta Auto u Orden");
 
       const conceptos = conceptosForm.filter(c => c.monto && c.porcentaje);
+      
+      // Mantenemos el estado 'finalizado' si estamos editando
+      const isFinished = editId ? (allDocs.find(x => x.id === editId)?.finalizado || false) : false;
+
       const data = {
         auto, color: el("inputColor").value.toUpperCase(), orden,
         placa: el("inputPlaca").value.toUpperCase(),
         observacion: el("inputObservacion").value,
         conceptos,
-        fecha: new Date().toISOString().slice(0,10)
+        fecha: editId ? (allDocs.find(x => x.id === editId).fecha) : new Date().toISOString().slice(0,10),
+        finalizado: isFinished
       };
 
       try {
@@ -493,11 +511,9 @@
       } catch(e) { alert(e.message); }
     };
 
-    // --- NUEVA LÓGICA DE GUARDADO DE MATERIAL (POR SEMANA) ---
     if(el("btnSaveMat")){
         el("btnSaveMat").onclick = async () => {
            const v = parseFloat(el("inputMaterial").value)||0;
-           // Guardamos con la clave dinámica (ej: mat_20231027)
            const key = getWeekKey();
            await setDoc(docConfig, { [key]: v }, { merge: true });
            alert("Costo Material Guardado para esta semana");
@@ -533,168 +549,61 @@
 
     el("btnPDFSimple").onclick = () => {
       if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      
-      const colorPrimary = [239, 68, 68];
-      const colorDark = [15, 23, 42];
-      const colorGray = [100, 116, 139];
-      
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.setTextColor(...colorDark);
-      doc.text("LISTADO DE ORDENES", 14, 20);
-      
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(...colorGray);
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      doc.text(el("textoPeriodo").innerText, 14, 34);
-
-      const tableBody = viewDocs.map(r => [
-          r.orden,
-          r.auto,
-          r.color,
-          r.placa || "-",
-          (r.observacion || r.detalle || "")
-      ]);
-
+      const { jsPDF } = window.jspdf; const doc = new jsPDF();
+      const colorPrimary = [239, 68, 68]; const colorDark = [15, 23, 42]; const colorGray = [100, 116, 139];
+      doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(...colorDark); doc.text("LISTADO DE ORDENES", 14, 20);
+      doc.setFontSize(11); doc.setTextColor(0, 0, 0); doc.text(el("textoPeriodo").innerText, 14, 34);
+      const tableBody = viewDocs.map(r => [r.orden, r.auto, r.color, r.placa || "-", (r.observacion || r.detalle || "")]);
       doc.autoTable({
-        startY: 40,
-        head: [["ORDEN", "AUTO", "COLOR", "PLACA", "NOTAS"]],
-        body: tableBody,
-        theme: 'grid',
-        headStyles: { 
-            fillColor: colorPrimary, 
-            textColor: 255, 
-            fontStyle: 'bold',
-            halign: 'center'
-        },
-        columnStyles: {
-            0: { halign: 'center', fontStyle: 'bold', cellWidth: 25 },
-            3: { halign: 'center' }
-        },
+        startY: 40, head: [["ORDEN", "AUTO", "COLOR", "PLACA", "NOTAS"]], body: tableBody, theme: 'grid',
+        headStyles: { fillColor: colorPrimary, textColor: 255, fontStyle: 'bold', halign: 'center' },
         styles: { fontSize: 10, cellPadding: 3, valign: 'middle' },
       });
-
       doc.save("Ordenes_Taller_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
     el("btnPDF").onclick = () => {
       if(!viewDocs.length) return alert("No hay datos para generar el reporte.");
-      
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      
-      const colorPrimary = [239, 68, 68];
-      const colorDark = [15, 23, 42];
-      const colorGray = [100, 116, 139];
-      
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.setTextColor(...colorDark);
-      doc.text("REPORTE FINANCIERO", 14, 20);
-      
-      doc.setFontSize(10);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(...colorGray);
-      
-      doc.setFontSize(11);
-      doc.setTextColor(0, 0, 0);
-      doc.text(el("textoPeriodo").innerText, 14, 34);
-
+      const { jsPDF } = window.jspdf; const doc = new jsPDF();
+      const colorPrimary = [239, 68, 68]; const colorDark = [15, 23, 42]; const colorGray = [100, 116, 139];
+      doc.setFont("helvetica", "bold"); doc.setFontSize(18); doc.setTextColor(...colorDark); doc.text("REPORTE FINANCIERO", 14, 20);
+      doc.setFontSize(11); doc.setTextColor(0, 0, 0); doc.text(el("textoPeriodo").innerText, 14, 34);
       let sumaTotalGanado = 0;
-
       const tableBody = viewDocs.map(r => {
-        let totalOrden = 0;
-        let detalleTexto = "";
-        
+        let totalOrden = 0; let detalleTexto = "";
         if(r.conceptos && r.conceptos.length) {
             r.conceptos.forEach(c => {
-                const m = parseFloat(c.monto)||0;
-                const p = parseFloat(c.porcentaje)||0;
-                const ganancia = m * (p/100);
-                totalOrden += ganancia;
-                detalleTexto += `• ${c.nombre}: $${ganancia.toFixed(0)}\n`;
+                const ganancia = (parseFloat(c.monto)||0) * ((parseFloat(c.porcentaje)||0)/100);
+                totalOrden += ganancia; detalleTexto += `• ${c.nombre}: $${ganancia.toFixed(0)}\n`;
             });
-        } else {
-            detalleTexto = "Sin conceptos";
         }
-        
         sumaTotalGanado += totalOrden;
-
-        return [
-          r.orden,
-          r.auto + "\n" + r.color,
-          detalleTexto,
-          (r.observacion || ""),
-          "$" + totalOrden.toFixed(0)
-        ];
+        return [r.orden, r.auto + "\n" + r.color, detalleTexto, (r.observacion || ""), "$" + totalOrden.toFixed(0)];
       });
-
       doc.autoTable({
-        startY: 40,
-        head: [["ORDEN", "VEHÍCULO", "CONCEPTOS", "NOTAS", "TOTAL"]],
-        body: tableBody,
-        theme: 'grid',
-        headStyles: { 
-            fillColor: colorPrimary, 
-            textColor: 255, 
-            fontStyle: 'bold',
-            halign: 'center'
-        },
-        columnStyles: {
-            0: { halign: 'center', fontStyle: 'bold', cellWidth: 20 },
-            4: { halign: 'right', fontStyle: 'bold', textColor: [22, 163, 74] }
-        },
+        startY: 40, head: [["ORDEN", "VEHÍCULO", "CONCEPTOS", "NOTAS", "TOTAL"]], body: tableBody, theme: 'grid',
+        headStyles: { fillColor: colorPrimary, textColor: 255, fontStyle: 'bold', halign: 'center' },
+        columnStyles: { 4: { halign: 'right', fontStyle: 'bold', textColor: [22, 163, 74] } },
         styles: { fontSize: 9, cellPadding: 3, valign: 'middle' },
       });
-
       let finalY = doc.lastAutoTable.finalY + 10;
       if (finalY > 250) { doc.addPage(); finalY = 20; }
-
       const gastoMaterial = parseFloat(el("inputMaterial").value) || 0;
       const utilidadNeta = sumaTotalGanado - gastoMaterial;
-
-      doc.setFillColor(248, 250, 252);
-      doc.setDrawColor(203, 213, 225);
-      doc.rect(120, finalY, 75, 35, 'FD');
-
-      doc.setFontSize(10);
-      doc.setTextColor(...colorGray);
-      doc.text("RESUMEN DEL PERIODO", 125, finalY + 8);
-
-      doc.setFontSize(11);
-      doc.setTextColor(0,0,0);
-      doc.text("Total Ganado:", 125, finalY + 16);
-      doc.setFont("helvetica", "bold");
-      doc.text("$" + sumaTotalGanado.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 16, { align: "right" });
-
-      doc.setFont("helvetica", "normal");
-      doc.text("(-) Material:", 125, finalY + 23);
-      doc.setTextColor(220, 38, 38);
-      doc.text("-$" + gastoMaterial.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 23, { align: "right" });
-
-      doc.setDrawColor(200, 200, 200);
-      doc.line(125, finalY + 26, 190, finalY + 26);
-      
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
-      doc.setTextColor(...colorDark);
-      doc.text("UTILIDAD NETA:", 125, finalY + 32);
-      
-      if(utilidadNeta >= 0) doc.setTextColor(22, 163, 74); 
-      else doc.setTextColor(220, 38, 38);
-
+      doc.setFillColor(248, 250, 252); doc.setDrawColor(203, 213, 225); doc.rect(120, finalY, 75, 35, 'FD');
+      doc.setFontSize(10); doc.setTextColor(...colorGray); doc.text("RESUMEN DEL PERIODO", 125, finalY + 8);
+      doc.setFontSize(11); doc.setTextColor(0,0,0); doc.text("Total Ganado:", 125, finalY + 16);
+      doc.setFont("helvetica", "bold"); doc.text("$" + sumaTotalGanado.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 16, { align: "right" });
+      doc.setFont("helvetica", "normal"); doc.text("(-) Material:", 125, finalY + 23);
+      doc.setTextColor(220, 38, 38); doc.text("-$" + gastoMaterial.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 23, { align: "right" });
+      doc.setDrawColor(200, 200, 200); doc.line(125, finalY + 26, 190, finalY + 26);
+      doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(...colorDark); doc.text("UTILIDAD NETA:", 125, finalY + 32);
+      if(utilidadNeta >= 0) doc.setTextColor(22, 163, 74); else doc.setTextColor(220, 38, 38);
       doc.text("$" + utilidadNeta.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 32, { align: "right" });
-
       doc.save("Reporte_Finanzas_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
-    // AUTH
+    // AUTH & LISTENERS
     el("inputBuscar").oninput = filtrar; el("dateDesde").onchange = filtrar; el("dateHasta").onchange = filtrar;
     el("btnLimpiarFiltros").onclick = () => { el("dateDesde").value=""; el("dateHasta").value=""; el("inputBuscar").value=""; filtrar(); };
 
@@ -709,18 +618,16 @@
         el("loginWrapper").style.display = "none"; el("appWrapper").style.display = "block";
         onSnapshot(docConfig, (s) => { 
             if(s.exists() && el("inputMaterial")) { 
-                // --- NUEVA LÓGICA DE CARGA DE MATERIAL ---
-                // Leemos el material SOLO correspondiente a la semana actual
                 const key = getWeekKey();
-                materialCost = s.data()[key] || 0; // Si no existe clave, es 0
+                materialCost = s.data()[key] || 0;
                 el("inputMaterial").value = materialCost; 
                 filtrar(); 
             } 
         });
         onSnapshot(query(colRef, orderBy("createdAt","asc")), (s) => {
           allDocs = s.docs.map(d => {
-             let f = d.data().fecha; if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
-             return {id:d.id, ...d.data(), fecha:f||""};
+              let f = d.data().fecha; if(!f && d.data().createdAt) f = d.data().createdAt.toDate().toISOString().slice(0,10);
+              return {id:d.id, ...d.data(), fecha:f||""};
           });
           filtrar();
         });
