@@ -57,7 +57,6 @@
     .app-logo { position: absolute; left: 50%; transform: translateX(-50%); font-size: 1.4rem; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 2px; }
     .btn-logout { background: white; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: #64748b; margin-left: auto; text-transform: uppercase; cursor: pointer; }
 
-    /* DASHBOARD FINANCIERO - AJUSTADO A 4 COLUMNAS EN DESKTOP */
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
     @media (max-width: 850px) { .stats-row { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 500px) { .stats-row { grid-template-columns: 1fr; } }
@@ -77,7 +76,7 @@
     .input-ghost::placeholder { color: rgba(255,255,255,0.3); }
     .input-ghost:focus { border-bottom-color: var(--primary); }
 
-    /* ESTILOS DE ESTADO (NUEVO) */
+    /* ESTILOS DE ESTADO */
     .row-pending { border-left: 8px solid var(--pending) !important; }
     .row-finished { border-left: 8px solid var(--success) !important; background-color: #f0fdf4 !important; }
     
@@ -102,7 +101,6 @@
     }
     input.app-input:focus, textarea:focus, select:focus { border-color: var(--primary); background: #fff; }
 
-    /* CONCEPTOS */
     .concept-item { display: grid; grid-template-columns: 2fr 1fr 1fr 30px; gap: 5px; margin-bottom: 8px; align-items: center; background: #f1f5f9; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
     @media (max-width: 500px) { .concept-item { grid-template-columns: 1fr 1fr; row-gap: 8px; } .concept-item select { grid-column: span 2; } }
     
@@ -111,7 +109,6 @@
 
     .btn-save { width: 100%; background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 800; display: flex; justify-content: center; gap: 8px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); cursor: pointer; }
 
-    /* HERRAMIENTAS */
     .tools-section { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
     .btn-group { display: flex; gap: 8px; margin-top: 10px; }
     .btn-tool { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
@@ -179,7 +176,7 @@
     <div class="stats-row">
       <div class="stat-card">
         <span class="stat-label">Ganado</span>
-        <div class="stat-val" style="color:var(--primary)" id="dispComisiones">$0</div>
+        <div class="stat-val" style="color:var(--primary)" id="dispComisiones">$0.00</div>
       </div>
       <div class="stat-card">
         <span class="stat-label">Autos Semanales</span>
@@ -187,12 +184,12 @@
       </div>
       <div class="stat-card dark" id="cardNeta">
         <span class="stat-label">Ganancia Neta</span>
-        <div class="stat-val" id="dispNeta">$0</div>
+        <div class="stat-val" id="dispNeta">$0.00</div>
       </div>
       <div class="stat-card dark" style="background:#334155;">
         <span class="stat-label">Material Semanal</span>
         <div>
-          $ <input type="number" id="inputMaterial" class="input-ghost" placeholder="0">
+          $ <input type="number" id="inputMaterial" class="input-ghost" step="0.01" placeholder="0.00">
           <span id="btnSaveMat" style="cursor:pointer; font-size:1.7rem;" title="Guardar">💾</span>
         </div>
       </div>
@@ -287,9 +284,13 @@
     let editId = null;
     let materialCost = 0;
     let conceptosForm = [];
+    let yaAlertadoJueves = false; // Para que la alerta solo salga una vez por sesión
 
     const el = (id) => document.getElementById(id);
-    const formatMoney = (n) => "$" + n.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    
+    // --- NUEVO: Formato con 2 decimales ---
+    const formatMoney = (n) => "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    
     const formatLatino = (iso) => { 
         if(!iso) return ""; 
         const parts = iso.split("-"); 
@@ -306,12 +307,27 @@
        return "mat_" + new Date(d.getTime()-off).toISOString().slice(0,10).replace(/-/g,"");
     };
 
-    // --- NUEVA FUNCION: TOGGLE DE ESTADO ---
     window.toggleStatus = async (id, currentStatus) => {
         try {
             await updateDoc(doc(db, "registros", id), { finalizado: !currentStatus });
         } catch(e) { console.error("Error al actualizar estado:", e); }
     };
+
+    // --- NUEVA FUNCIÓN: ALERTA DE JUEVES ---
+    function checkThursdayAlert(lista) {
+        if (yaAlertadoJueves) return;
+        const hoy = new Date();
+        // getDay() devuelve 4 para Jueves
+        if (hoy.getDay() === 4) {
+            const pendientes = lista.filter(r => !r.finalizado).length;
+            if (pendientes > 0) {
+                setTimeout(() => {
+                    alert(`⚠️ RECORDATORIO DE JUEVES:\nTienes ${pendientes} carros pendientes por finalizar. Recuerda darlos de baja antes del cierre.`);
+                    yaAlertadoJueves = true;
+                }, 1000);
+            }
+        }
+    }
 
     // RENDERIZADO DUAL
     function render(lista) {
@@ -334,6 +350,9 @@
         }
         if(r.finalizado) autosTerminados++;
       });
+
+      // Ejecutar check de jueves
+      checkThursdayAlert(lista);
 
       if(el("dispComisiones")) el("dispComisiones").textContent = formatMoney(totalComisiones);
       if(el("dispAutos")) el("dispAutos").textContent = `${autosTerminados} / ${autosTotales}`;
@@ -359,7 +378,8 @@
             const p = parseFloat(c.porcentaje)||0;
             const g = m * (p/100);
             totalOrden += g;
-            htmlDesglose += `<div style="font-size:0.8rem; color:#64748b">${c.nombre}: <b>$${g.toFixed(0)}</b></div>`;
+            // Mostramos 2 decimales en el desglose
+            htmlDesglose += `<div style="font-size:0.8rem; color:#64748b">${c.nombre}: <b>$${g.toFixed(2)}</b></div>`;
             arrayDesglose.push({nombre: c.nombre, val: g});
           });
         }
@@ -368,13 +388,12 @@
         const statusIcon = r.finalizado ? "✅" : "⭕";
         const obs = r.observacion || r.detalle || "";
 
-        // Pintar Fila Escritorio
         const tr = document.createElement("tr");
         tr.className = statusClass;
         tr.innerHTML = `
           <td><b>${r.auto}</b><br><span style="font-size:0.8rem; color:#64748b">${r.color}</span></td>
           <td><span style="background:#eff6ff; color:#3b82f6; padding:3px 6px; border-radius:4px; font-weight:bold; font-size:0.8rem;">${r.orden}</span></td>
-          <td>${htmlDesglose}<div style="border-top:1px solid #e2e8f0; font-weight:bold; color:var(--success); margin-top:2px;">Total: $${totalOrden.toFixed(0)}</div></td>
+          <td>${htmlDesglose}<div style="border-top:1px solid #e2e8f0; font-weight:bold; color:var(--success); margin-top:2px;">Total: $${totalOrden.toFixed(2)}</div></td>
           <td style="font-size:0.85rem;">${formatLatino(r.fecha)}</td>
           <td style="text-align:right;">
              <div style="display:flex; gap:8px; justify-content:flex-end; align-items:center;">
@@ -386,11 +405,10 @@
         `;
         tb.appendChild(tr);
 
-        // Pintar Card Móvil
         let htmlDetalleMovil = "";
         if(arrayDesglose.length > 0) {
             arrayDesglose.forEach(item => {
-                htmlDetalleMovil += `<div class="m-detail-row"><span>${item.nombre}</span><b>$${item.val.toFixed(0)}</b></div>`;
+                htmlDetalleMovil += `<div class="m-detail-row"><span>${item.nombre}</span><b>$${item.val.toFixed(2)}</b></div>`;
             });
         }
 
@@ -404,7 +422,7 @@
               <span class="m-badge">#${r.orden}</span>
             </div>
             <div class="m-money">
-              <span class="m-total">$${totalOrden.toFixed(0)}</span>
+              <span class="m-total">$${totalOrden.toFixed(2)}</span>
               <span class="m-arrow">▼ Ver</span>
             </div>
           </div>
@@ -438,8 +456,8 @@
             <option value="Particular" ${item.nombre==='Particular'?'selected':''}>Particular</option>
             <option value="Otro" ${item.nombre==='Otro'?'selected':''}>Otro</option>
           </select>
-          <input type="number" class="app-input" style="margin:0" placeholder="$" value="${item.monto}" oninput="window.updCon(${i},'monto',this.value)">
-          <input type="number" class="app-input" style="margin:0" placeholder="%" value="${item.porcentaje}" oninput="window.updCon(${i},'porcentaje',this.value)">
+          <input type="number" step="0.01" class="app-input" style="margin:0" placeholder="$" value="${item.monto}" oninput="window.updCon(${i},'monto',this.value)">
+          <input type="number" step="0.01" class="app-input" style="margin:0" placeholder="%" value="${item.porcentaje}" oninput="window.updCon(${i},'porcentaje',this.value)">
           ${i>0 ? `<button class="btn-x" onclick="window.delCon(${i})">×</button>` : '<span></span>'}
         `;
         c.appendChild(div);
@@ -491,8 +509,6 @@
       if(!auto || !orden) return alert("Falta Auto u Orden");
 
       const conceptos = conceptosForm.filter(c => c.monto && c.porcentaje);
-      
-      // Mantenemos el estado 'finalizado' si estamos editando
       const isFinished = editId ? (allDocs.find(x => x.id === editId)?.finalizado || false) : false;
 
       const data = {
@@ -574,11 +590,13 @@
         if(r.conceptos && r.conceptos.length) {
             r.conceptos.forEach(c => {
                 const ganancia = (parseFloat(c.monto)||0) * ((parseFloat(c.porcentaje)||0)/100);
-                totalOrden += ganancia; detalleTexto += `• ${c.nombre}: $${ganancia.toFixed(0)}\n`;
+                totalOrden += ganancia; 
+                // PDF con 2 decimales
+                detalleTexto += `• ${c.nombre}: $${ganancia.toFixed(2)}\n`;
             });
         }
         sumaTotalGanado += totalOrden;
-        return [r.orden, r.auto + "\n" + r.color, detalleTexto, (r.observacion || ""), "$" + totalOrden.toFixed(0)];
+        return [r.orden, r.auto + "\n" + r.color, detalleTexto, (r.observacion || ""), "$" + totalOrden.toFixed(2)];
       });
       doc.autoTable({
         startY: 40, head: [["ORDEN", "VEHÍCULO", "CONCEPTOS", "NOTAS", "TOTAL"]], body: tableBody, theme: 'grid',
@@ -593,13 +611,15 @@
       doc.setFillColor(248, 250, 252); doc.setDrawColor(203, 213, 225); doc.rect(120, finalY, 75, 35, 'FD');
       doc.setFontSize(10); doc.setTextColor(...colorGray); doc.text("RESUMEN DEL PERIODO", 125, finalY + 8);
       doc.setFontSize(11); doc.setTextColor(0,0,0); doc.text("Total Ganado:", 125, finalY + 16);
-      doc.setFont("helvetica", "bold"); doc.text("$" + sumaTotalGanado.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 16, { align: "right" });
+      doc.setFont("helvetica", "bold"); 
+      // Formato con comas y 2 decimales en el PDF final
+      doc.text("$" + sumaTotalGanado.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 16, { align: "right" });
       doc.setFont("helvetica", "normal"); doc.text("(-) Material:", 125, finalY + 23);
-      doc.setTextColor(220, 38, 38); doc.text("-$" + gastoMaterial.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 23, { align: "right" });
+      doc.setTextColor(220, 38, 38); doc.text("-$" + gastoMaterial.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 23, { align: "right" });
       doc.setDrawColor(200, 200, 200); doc.line(125, finalY + 26, 190, finalY + 26);
       doc.setFont("helvetica", "bold"); doc.setFontSize(13); doc.setTextColor(...colorDark); doc.text("UTILIDAD NETA:", 125, finalY + 32);
       if(utilidadNeta >= 0) doc.setTextColor(22, 163, 74); else doc.setTextColor(220, 38, 38);
-      doc.text("$" + utilidadNeta.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 32, { align: "right" });
+      doc.text("$" + utilidadNeta.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","), 190, finalY + 32, { align: "right" });
       doc.save("Reporte_Finanzas_" + new Date().toISOString().slice(0,10) + ".pdf");
     };
 
@@ -620,7 +640,7 @@
             if(s.exists() && el("inputMaterial")) { 
                 const key = getWeekKey();
                 materialCost = s.data()[key] || 0;
-                el("inputMaterial").value = materialCost; 
+                el("inputMaterial").value = materialCost.toFixed(2); 
                 filtrar(); 
             } 
         });
