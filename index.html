@@ -318,7 +318,7 @@
         if (yaAlertadoJueves) return;
         const hoy = new Date();
         // getDay() devuelve 4 para Jueves
-        if (hoy.getDay() === 3) {
+        if (hoy.getDay() === 4) {
             const pendientes = lista.filter(r => !r.finalizado).length;
             if (pendientes > 0) {
                 setTimeout(() => {
