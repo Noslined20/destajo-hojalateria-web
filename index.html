@@ -512,11 +512,20 @@
       const isFinished = editId ? (allDocs.find(x => x.id === editId)?.finalizado || false) : false;
 
       const data = {
-        auto, color: el("inputColor").value.toUpperCase(), orden,
+        auto, 
+        color: el("inputColor").value.toUpperCase(), 
+        orden,
         placa: el("inputPlaca").value.toUpperCase(),
         observacion: el("inputObservacion").value,
         conceptos,
-        fecha: editId ? (allDocs.find(x => x.id === editId).fecha) : new Date().toISOString().slice(0,10),
+        // --- AQUÍ ESTÁ EL CAMBIO ---
+        // Si es nuevo, ajustamos la hora local antes de guardar
+        fecha: editId ? (allDocs.find(x => x.id === editId).fecha) : (() => {
+            const d = new Date();
+            d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+            return d.toISOString().slice(0,10);
+        })(),
+        // ---------------------------
         finalizado: isFinished
       };
 
